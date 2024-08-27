@@ -10,5 +10,7 @@ namespace Domain.Repositories
     public interface ICategoryRepository
     {
         Task<Category> GetById(Guid id);
+        IEnumerable<Category> GetAll();
+        void Insert(Category category);
     }
 }
