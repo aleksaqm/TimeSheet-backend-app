@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TimeSheet.Migrations
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class initialmigration : Migration
@@ -59,9 +59,9 @@ namespace TimeSheet.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HoursPerWeek = table.Column<double>(type: "float", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -71,8 +71,7 @@ namespace TimeSheet.Migrations
                         name: "FK_TeamMembers_Statuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "Statuses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -83,7 +82,7 @@ namespace TimeSheet.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TeamMember = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LeadId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -93,20 +92,17 @@ namespace TimeSheet.Migrations
                         name: "FK_Projects_Clients_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Projects_Statuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "Statuses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Projects_TeamMembers_TeamMember",
-                        column: x => x.TeamMember,
+                        name: "FK_Projects_TeamMembers_LeadId",
+                        column: x => x.LeadId,
                         principalTable: "TeamMembers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -130,26 +126,22 @@ namespace TimeSheet.Migrations
                         name: "FK_Activities_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Activities_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Activities_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Activities_TeamMembers_UserId",
                         column: x => x.UserId,
                         principalTable: "TeamMembers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -178,14 +170,14 @@ namespace TimeSheet.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_LeadId",
+                table: "Projects",
+                column: "LeadId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Projects_StatusId",
                 table: "Projects",
                 column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_TeamMember",
-                table: "Projects",
-                column: "TeamMember");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TeamMembers_StatusId",
