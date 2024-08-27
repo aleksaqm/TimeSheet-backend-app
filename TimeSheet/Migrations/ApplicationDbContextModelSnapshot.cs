@@ -31,7 +31,7 @@ namespace TimeSheet.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
@@ -49,7 +49,7 @@ namespace TimeSheet.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -117,7 +117,7 @@ namespace TimeSheet.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CustomerId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -127,10 +127,10 @@ namespace TimeSheet.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("StatusId")
+                    b.Property<Guid>("StatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TeamMember")
+                    b.Property<Guid>("TeamMember")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -183,7 +183,7 @@ namespace TimeSheet.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("StatusId")
+                    b.Property<Guid>("StatusId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
@@ -207,7 +207,9 @@ namespace TimeSheet.Migrations
 
                     b.HasOne("TimeSheet.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TimeSheet.Models.Project", "Project")
                         .WithMany()
@@ -217,7 +219,9 @@ namespace TimeSheet.Migrations
 
                     b.HasOne("TimeSheet.Models.TeamMember", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
@@ -232,15 +236,21 @@ namespace TimeSheet.Migrations
                 {
                     b.HasOne("TimeSheet.Models.Client", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TimeSheet.Models.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TimeSheet.Models.TeamMember", "Lead")
                         .WithMany()
-                        .HasForeignKey("TeamMember");
+                        .HasForeignKey("TeamMember")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
 
@@ -253,7 +263,9 @@ namespace TimeSheet.Migrations
                 {
                     b.HasOne("TimeSheet.Models.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Status");
                 });
