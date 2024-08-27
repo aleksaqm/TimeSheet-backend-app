@@ -8,7 +8,7 @@ namespace TimeSheet.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public required DateTime Date {  get; set; }
-        public required Client Client { get; set; }
+        public Client? Client { get; set; }
         public required Category Category { get; set; }
         public required Project Project { get; set; }
         public string? Description {  get; set; }

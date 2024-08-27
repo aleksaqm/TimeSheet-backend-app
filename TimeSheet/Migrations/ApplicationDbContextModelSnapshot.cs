@@ -31,7 +31,7 @@ namespace TimeSheet.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClientId")
+                    b.Property<Guid?>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
@@ -117,7 +117,7 @@ namespace TimeSheet.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CustomerId")
+                    b.Property<Guid?>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -207,9 +207,7 @@ namespace TimeSheet.Migrations
 
                     b.HasOne("TimeSheet.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClientId");
 
                     b.HasOne("TimeSheet.Models.Project", "Project")
                         .WithMany()
@@ -234,9 +232,7 @@ namespace TimeSheet.Migrations
                 {
                     b.HasOne("TimeSheet.Models.Client", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("TimeSheet.Models.Status", "Status")
                         .WithMany()

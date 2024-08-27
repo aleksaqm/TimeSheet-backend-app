@@ -12,7 +12,7 @@ using TimeSheet.Data;
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240826150318_initial migration")]
+    [Migration("20240827065438_initial migration")]
     partial class initialmigration
     {
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace TimeSheet.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClientId")
+                    b.Property<Guid?>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
@@ -49,11 +49,21 @@ namespace TimeSheet.Migrations
                     b.Property<double?>("Overtime")
                         .HasColumnType("float");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Activities");
                 });
@@ -110,7 +120,7 @@ namespace TimeSheet.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CustomerId")
+                    b.Property<Guid?>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -123,7 +133,7 @@ namespace TimeSheet.Migrations
                     b.Property<Guid?>("StatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TeamMember")
+                    b.Property<Guid?>("TeamMember")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -200,22 +210,32 @@ namespace TimeSheet.Migrations
 
                     b.HasOne("TimeSheet.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId")
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("TimeSheet.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("TimeSheet.Models.TeamMember", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Category");
 
                     b.Navigation("Client");
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TimeSheet.Models.Project", b =>
                 {
                     b.HasOne("TimeSheet.Models.Client", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("TimeSheet.Models.Status", "Status")
                         .WithMany()
@@ -223,9 +243,7 @@ namespace TimeSheet.Migrations
 
                     b.HasOne("TimeSheet.Models.TeamMember", "Lead")
                         .WithMany()
-                        .HasForeignKey("TeamMember")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamMember");
 
                     b.Navigation("Customer");
 
