@@ -13,5 +13,6 @@ namespace Domain.Repositories
         Task<IEnumerable<Category>> GetAllAsync();
         Task AddAsync(Category category);
         Task<Category?> UpdateAsync(Category category);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

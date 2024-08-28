@@ -3,6 +3,7 @@ using Infrastructure;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Service.Abstractions;
+using Services.Abstractions;
 using Services.Implementations;
 using Services.MappingProfiles;
 using System.Reflection;
@@ -19,11 +20,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
+builder.Services.AddTransient<ITeamMemberRepository, TeamMemberRepository>();
+builder.Services.AddTransient<ITeamMemberService, TeamMemberService>();
+
 builder.Services.AddDbContext<RepositoryDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-builder.Services.AddAutoMapper(typeof(CategoryProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 var app = builder.Build();

@@ -47,5 +47,15 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return existingCategory;
         }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var existingCategory = await _dbContext.Categories.FindAsync(id);
+            if (existingCategory == null)
+                return false;
+            _dbContext.Categories.Remove(existingCategory);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

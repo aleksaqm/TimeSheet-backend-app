@@ -59,5 +59,9 @@ namespace Services.Implementations
             return _mapper.Map<UpdateCategoryDto>(result);
         }
 
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            return await _repository.DeleteAsync(id);
+        }
     }
 }

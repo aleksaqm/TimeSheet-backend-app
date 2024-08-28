@@ -43,5 +43,14 @@ namespace TimeSheet.Controllers
             return category==null ? BadRequest("Category with given ID doesn't exist") : Ok(category);
         }
 
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id) { 
+            bool success = await _categoryService.DeleteAsync(id);
+            if (success)
+                return Ok();
+            return BadRequest("Category with given ID doesn't exist");
+        }
+
     }
 }
