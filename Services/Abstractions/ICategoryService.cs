@@ -10,8 +10,14 @@ namespace Service.Abstractions
 {
     public interface ICategoryService
     {
-        Task<CategoryDto> GetById(Guid id);
-        IEnumerable<CategoryDto> GetAll();
-        Category Insert(CategoryDto categoryDto);
+        Task<UpdateCategoryDto?> GetByIdAsync(Guid id);
+        Task<IEnumerable<UpdateCategoryDto>> GetAllAsync();
+        Task<UpdateCategoryDto?> AddAsync(CreateCategoryDto categoryDto);
+        Task<UpdateCategoryDto?> UpdateAsync(UpdateCategoryDto categoryDto);
+        //UpdateCategoryDto? GetById(Guid id);
+        //IEnumerable<UpdateCategoryDto> GetAll();
+        //UpdateCategoryDto? Add(CreateCategoryDto categoryDto);
+        //UpdateCategoryDto? Update(UpdateCategoryDto categoryDto);
+
     }
 }

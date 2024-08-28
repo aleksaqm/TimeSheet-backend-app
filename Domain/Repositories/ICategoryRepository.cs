@@ -9,8 +9,13 @@ namespace Domain.Repositories
 {
     public interface ICategoryRepository
     {
-        Task<Category> GetById(Guid id);
-        IEnumerable<Category> GetAll();
-        void Insert(Category category);
+        Task<Category?> GetByIdAsync(Guid id);
+        Task<IEnumerable<Category>> GetAllAsync();
+        Task AddAsync(Category category);
+        Task<Category?> UpdateAsync(Category category);
+        //Category? GetById(Guid id);
+        //IEnumerable<Category> GetAll();
+        //void Add(Category category);
+        //public Category? Update(Category category);
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Shared
 {
-    public class CategoryDto
+    public class UpdateCategoryDto
     {
-        public Guid? Id { get; set; }
+        public required Guid Id { get; set; }
         public required string Name { get; set; }
     }
 }
