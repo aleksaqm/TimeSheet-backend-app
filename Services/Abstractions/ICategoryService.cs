@@ -14,10 +14,5 @@ namespace Service.Abstractions
         Task<IEnumerable<UpdateCategoryDto>> GetAllAsync();
         Task<UpdateCategoryDto?> AddAsync(CreateCategoryDto categoryDto);
         Task<UpdateCategoryDto?> UpdateAsync(UpdateCategoryDto categoryDto);
-        //UpdateCategoryDto? GetById(Guid id);
-        //IEnumerable<UpdateCategoryDto> GetAll();
-        //UpdateCategoryDto? Add(CreateCategoryDto categoryDto);
-        //UpdateCategoryDto? Update(UpdateCategoryDto categoryDto);
-
     }
 }

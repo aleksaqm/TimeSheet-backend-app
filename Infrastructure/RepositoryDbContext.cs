@@ -14,6 +14,10 @@ namespace Infrastructure
         {
         }
 
+        public RepositoryDbContext()
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Category>()

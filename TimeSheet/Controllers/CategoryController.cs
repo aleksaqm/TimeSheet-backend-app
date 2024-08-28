@@ -17,28 +17,29 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<UpdateCategoryDto>> GetAll() { 
-            return Ok(_categoryService.GetAllAsync());
+        public async Task<ActionResult<List<UpdateCategoryDto>>> GetAll() { 
+            var results = await _categoryService.GetAllAsync();
+            return Ok(results);
         }
 
         [HttpGet]
         [Route("{id:guid}")]
-        public ActionResult<UpdateCategoryDto> GetById(Guid id) {
-            var result = _categoryService.GetByIdAsync(id);
+        public async Task<ActionResult<UpdateCategoryDto>> GetById(Guid id) {
+            var result = await _categoryService.GetByIdAsync(id);
             if (result == null)
                 return BadRequest("Category with given ID doesn't exist");
             return Ok(result);
         }
 
         [HttpPost]
-        public ActionResult<UpdateCategoryDto> Add(CreateCategoryDto categoryDto) { 
-            var category = _categoryService.AddAsync(categoryDto);
+        public async Task<ActionResult<UpdateCategoryDto>> Add(CreateCategoryDto categoryDto) { 
+            var category = await _categoryService.AddAsync(categoryDto);
             return category == null ? BadRequest() : Ok(category);
         }
 
         [HttpPut]
-        public ActionResult<UpdateCategoryDto> Update(UpdateCategoryDto categoryDto) { 
-            var category = _categoryService.UpdateAsync(categoryDto);
+        public async Task<ActionResult<UpdateCategoryDto>> Update(UpdateCategoryDto categoryDto) { 
+            var category = await _categoryService.UpdateAsync(categoryDto);
             return category==null ? BadRequest("Category with given ID doesn't exist") : Ok(category);
         }
 

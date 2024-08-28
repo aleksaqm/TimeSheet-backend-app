@@ -18,6 +18,7 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
+
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
             var categories = await _dbContext.Categories.ToArrayAsync();
@@ -46,32 +47,5 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return existingCategory;
         }
-        //public IEnumerable<Category> GetAll()
-        //{
-        //    var categories = _dbContext.Categories.ToArray();
-        //    return categories;
-        //}
-
-        //public Category? GetById(Guid id)
-        //{
-        //    return _dbContext.Categories.Find(id);
-        //}
-
-        //public void Add(Category category)
-        //{
-        //    _dbContext.Categories.Add(category);
-        //    _dbContext.SaveChanges();
-        //}
-
-        //public Category? Update(Category category) {
-        //    var existingCategory = _dbContext.Categories.Find(category.Id);
-        //    if (existingCategory == null)
-        //    {
-        //        return null;
-        //    }
-        //    _dbContext.Entry(existingCategory).CurrentValues.SetValues(category);
-        //    _dbContext.SaveChanges();
-        //    return existingCategory;
-        //}
     }
 }
