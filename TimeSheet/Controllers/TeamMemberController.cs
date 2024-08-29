@@ -34,7 +34,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TeamMemberDto>> Add(CreateTeamMemberDto teamMemberDto)
+        public async Task<ActionResult<TeamMemberDto>> Add(TeamMemberCreateDto teamMemberDto)
         {
             var member = await _teamMemberService.AddAsync(teamMemberDto);
             return member == null ? BadRequest() : Ok(member);

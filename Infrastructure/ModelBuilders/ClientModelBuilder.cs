@@ -30,6 +30,7 @@ namespace Infrastructure.ModelBuilders
                 .Property(c => c.PostalCode).IsRequired();
             _modelBuilder.Entity<Client>()
                 .Property(c => c.Country).IsRequired();
+            _modelBuilder.Entity<Client>().HasIndex(c => c.Name).IsUnique();
         }
     }
 }

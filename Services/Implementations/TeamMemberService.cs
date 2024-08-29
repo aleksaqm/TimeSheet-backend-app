@@ -32,13 +32,12 @@ namespace Services.Implementations
         public async Task<TeamMemberDto?> GetByIdAsync(Guid id)
         {
             var member = await _repository.GetByIdAsync(id);
-            Console.WriteLine(member.Status.ToString());
             if (member == null)
                 return null;
             return _mapper.Map<TeamMemberDto>(member);
         }
 
-        public async Task<TeamMemberDto?> AddAsync(CreateTeamMemberDto teamMemberDto)
+        public async Task<TeamMemberDto?> AddAsync(TeamMemberCreateDto teamMemberDto)
         {
             var member = _mapper.Map<TeamMember>(teamMemberDto);
             try

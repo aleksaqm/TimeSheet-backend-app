@@ -23,6 +23,15 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ITeamMemberRepository, TeamMemberRepository>();
 builder.Services.AddTransient<ITeamMemberService, TeamMemberService>();
 
+builder.Services.AddTransient<IClientRepository, ClientRepository>();
+builder.Services.AddTransient<IClientService, ClientService>();
+
+builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+builder.Services.AddTransient<IProjectService, ProjectService>();
+
+builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
+builder.Services.AddTransient<IActivityService, ActivityService>();
+
 builder.Services.AddDbContext<RepositoryDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

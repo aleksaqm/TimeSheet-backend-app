@@ -22,27 +22,27 @@ namespace Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UpdateCategoryDto>> GetAllAsync()
+        public async Task<IEnumerable<CategoryUpdateDto>> GetAllAsync()
         {
             var categories = await _repository.GetAllAsync();
-            return _mapper.Map<List<UpdateCategoryDto>>(categories);
+            return _mapper.Map<List<CategoryUpdateDto>>(categories);
         }
 
-        public async Task<UpdateCategoryDto?> GetByIdAsync(Guid id)
+        public async Task<CategoryUpdateDto?> GetByIdAsync(Guid id)
         {
             var category = await _repository.GetByIdAsync(id);
             if (category == null)
                 return null;
-            return _mapper.Map<UpdateCategoryDto>(category);
+            return _mapper.Map<CategoryUpdateDto>(category);
         }
 
-        public async Task<UpdateCategoryDto?> AddAsync(CreateCategoryDto categoryDto)
+        public async Task<CategoryUpdateDto?> AddAsync(CategoryCreateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
             try
             {
                 await _repository.AddAsync(category);
-                return _mapper.Map<UpdateCategoryDto>(category);
+                return _mapper.Map<CategoryUpdateDto>(category);
             }
             catch (Exception)
             {
@@ -50,13 +50,13 @@ namespace Services.Implementations
             }
         }
 
-        public async Task<UpdateCategoryDto?> UpdateAsync(UpdateCategoryDto categoryDto)
+        public async Task<CategoryUpdateDto?> UpdateAsync(CategoryUpdateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
             var result = await _repository.UpdateAsync(category);
             if (result == null)
                 return null;
-            return _mapper.Map<UpdateCategoryDto>(result);
+            return _mapper.Map<CategoryUpdateDto>(result);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

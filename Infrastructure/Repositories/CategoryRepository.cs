@@ -52,7 +52,9 @@ namespace Infrastructure.Repositories
         {
             var existingCategory = await _dbContext.Categories.FindAsync(id);
             if (existingCategory == null)
+            {
                 return false;
+            }
             _dbContext.Categories.Remove(existingCategory);
             await _dbContext.SaveChangesAsync();
             return true;
