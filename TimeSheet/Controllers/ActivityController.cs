@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using Services.Implementations;
 using Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
@@ -32,6 +33,14 @@ namespace TimeSheet.Controllers
             if (result == null)
                 return BadRequest("Activity with given ID doesn't exist");
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("ByMonth")]
+        public async Task<ActionResult<List<ActivityDto>>> GetByMonth([Required] int year, [Required] int month)
+        {
+            var results = await _activityService.GetAllAsync();
+            return Ok(results);
         }
 
         [HttpPost]
