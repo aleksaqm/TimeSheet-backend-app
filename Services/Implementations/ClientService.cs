@@ -53,10 +53,18 @@ namespace Services.Implementations
         public async Task<ClientUpdateDto?> UpdateAsync(ClientUpdateDto clientDto)
         {
             var client = _mapper.Map<Client>(clientDto);
-            var result = await _repository.UpdateAsync(client);
-            if (result == null)
+            var existingClient = await _repository.GetByIdAsync(client.Id);
+            if (existingClient is null)
+            {
                 return null;
-            return _mapper.Map<ClientUpdateDto>(result);
+            }
+            existingClient.Name = clientDto.Name;
+            existingClient.Address = clientDto.Address;
+            existingClient.City = clientDto.City;
+            existingClient.PostalCode = clientDto.PostalCode;
+            existingClient.Country = clientDto.Country;
+            await _repository.UpdateAsync();
+            return _mapper.Map<ClientUpdateDto>(existingClient);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

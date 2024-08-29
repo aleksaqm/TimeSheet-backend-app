@@ -12,7 +12,7 @@ namespace Domain.Repositories
         Task<Client?> GetByIdAsync(Guid id);
         Task<IEnumerable<Client>> GetAllAsync();
         Task AddAsync(Client client);
-        Task<Client?> UpdateAsync(Client client);
+        Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);
     }
 }

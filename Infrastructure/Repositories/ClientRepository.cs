@@ -35,16 +35,9 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Client?> UpdateAsync(Client client)
+        public async Task UpdateAsync()
         {
-            var existingClient = await _dbContext.Clients.FindAsync(client.Id);
-            if (existingClient == null)
-            {
-                return null;
-            }
-            _dbContext.Entry(existingClient).CurrentValues.SetValues(client);
             await _dbContext.SaveChangesAsync();
-            return existingClient;
         }
 
         public async Task<bool> DeleteAsync(Guid id)

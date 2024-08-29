@@ -36,16 +36,9 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Category?> UpdateAsync(Category category)
+        public async Task UpdateAsync()
         {
-            var existingCategory = await _dbContext.Categories.FindAsync(category.Id);
-            if (existingCategory == null)
-            {
-                return null;
-            }
-            _dbContext.Entry(existingCategory).CurrentValues.SetValues(category);
             await _dbContext.SaveChangesAsync();
-            return existingCategory;
         }
 
         public async Task<bool> DeleteAsync(Guid id)

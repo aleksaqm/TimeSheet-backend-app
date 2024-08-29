@@ -37,21 +37,9 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<TeamMember?> UpdateAsync(TeamMember member)
+        public async Task UpdateAsync()
         {
-            var existingMember = await _dbContext.TeamMembers.Include(t => t.Status).FirstOrDefaultAsync(t => t.Id == member.Id);
-            if (existingMember == null)
-            {
-                return null;
-            }
-            existingMember.Name = member.Name;
-            existingMember.Username = member.Username;
-            existingMember.Email = member.Email;
-            existingMember.HoursPerWeek = member.HoursPerWeek;
-            existingMember.Status.StatusName = member.Status.StatusName;
-            existingMember.Role = member.Role;
             await _dbContext.SaveChangesAsync();
-            return existingMember;
         }
 
         public async Task<bool> DeleteAsync(Guid id)

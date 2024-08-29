@@ -39,21 +39,9 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Project?> UpdateAsync(Project project)
+        public async Task UpdateAsync()
         {
-            var existingProject = await _dbContext.Projects.Include(t => t.Status).Include(t => t.Customer).Include(t => t.Lead).FirstOrDefaultAsync(t => t.Id == project.Id);
-            if (existingProject == null)
-            {
-                return null;
-            }
-            existingProject.Name = project.Name;
-            existingProject.Description = project.Description;
-            existingProject.CustomerId = project.CustomerId;
-            existingProject.LeadId = project.LeadId;
-            existingProject.Status.StatusName = project.Status.StatusName;
             await _dbContext.SaveChangesAsync();
-            return existingProject;
-
         }
 
         public async Task<bool> DeleteAsync(Guid id)

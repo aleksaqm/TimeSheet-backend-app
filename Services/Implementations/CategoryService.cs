@@ -53,10 +53,14 @@ namespace Services.Implementations
         public async Task<CategoryUpdateDto?> UpdateAsync(CategoryUpdateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
-            var result = await _repository.UpdateAsync(category);
-            if (result == null)
+            var existingCategory = await _repository.GetByIdAsync(category.Id);
+            if (existingCategory is null)
+            {
                 return null;
-            return _mapper.Map<CategoryUpdateDto>(result);
+            }
+            existingCategory.Name = category.Name;
+            await _repository.UpdateAsync();
+            return _mapper.Map<CategoryUpdateDto>(existingCategory);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

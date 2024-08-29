@@ -54,10 +54,19 @@ namespace Services.Implementations
         public async Task<TeamMemberDto?> UpdateAsync(TeamMemberDto teamMemberDto)
         {
             var member = _mapper.Map<TeamMember>(teamMemberDto);
-            var result = await _repository.UpdateAsync(member);
-            if (result == null)
+            var existingMember = await _repository.GetByIdAsync(member.Id);
+            if (existingMember is null)
+            {
                 return null;
-            return _mapper.Map<TeamMemberDto>(member);
+            }
+            existingMember.Name = member.Name;
+            existingMember.Username = member.Username;
+            existingMember.Email = member.Email;
+            existingMember.HoursPerWeek = member.HoursPerWeek;
+            existingMember.Status.StatusName = member.Status.StatusName;
+            existingMember.Role = member.Role;
+            await _repository.UpdateAsync();
+            return _mapper.Map<TeamMemberDto>(existingMember);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

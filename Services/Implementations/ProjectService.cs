@@ -56,10 +56,19 @@ namespace Services.Implementations
         public async Task<ProjectDto?> UpdateAsync(ProjectUpdateDto projectDto)
         {
             var project = _mapper.Map<Project>(projectDto);
-            var result = await _repository.UpdateAsync(project);
-            if (result == null)
+            var existingProject = await _repository.GetByIdAsync(project.Id);
+            if (existingProject is null)
+            {
                 return null;
-            return _mapper.Map<ProjectDto>(project);
+            }
+            existingProject.Name = project.Name;
+            existingProject.Description = project.Description;
+            existingProject.CustomerId = project.CustomerId;
+            existingProject.LeadId = project.LeadId;
+            existingProject.Status.StatusName = project.Status.StatusName;
+            await _repository.UpdateAsync();
+            //for full return - _repository.GetByIdAsync(project.Id);
+            return _mapper.Map<ProjectDto>(existingProject);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
