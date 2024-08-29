@@ -1,11 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -45,8 +40,10 @@ namespace Infrastructure.Repositories
         public async Task<bool> DeleteAsync(Guid id)
         {
             var existingMember = await _dbContext.TeamMembers.FindAsync(id);
-            if (existingMember == null)
+            if (existingMember is null)
+            {
                 return false;
+            }
             _dbContext.TeamMembers.Remove(existingMember);
             await _dbContext.SaveChangesAsync();
             return true;

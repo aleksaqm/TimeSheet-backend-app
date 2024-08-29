@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
 using Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.MappingProfiles
 {
@@ -49,9 +44,6 @@ namespace Services.MappingProfiles
                 .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client.Name))
                 .ForMember(dest => dest.Project, opt => opt.MapFrom(src => src.Project.Name))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
-
-
-
 
         }
     }

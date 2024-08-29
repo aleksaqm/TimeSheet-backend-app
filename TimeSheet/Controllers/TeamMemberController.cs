@@ -28,8 +28,10 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<TeamMemberDto>> GetById(Guid id)
         {
             var result = await _teamMemberService.GetByIdAsync(id);
-            if (result == null)
+            if (result is null)
+            {
                 return BadRequest("Team member with given ID doesn't exist");
+            }
             return Ok(result);
         }
 
@@ -37,14 +39,14 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<TeamMemberDto>> Add(TeamMemberCreateDto teamMemberDto)
         {
             var member = await _teamMemberService.AddAsync(teamMemberDto);
-            return member == null ? BadRequest() : Ok(member);
+            return member is null ? BadRequest() : Ok(member);
         }
 
         [HttpPut]
         public async Task<ActionResult<TeamMemberDto>> Update(TeamMemberDto teamMemberDto)
         {
             var member = await _teamMemberService.UpdateAsync(teamMemberDto);
-            return member == null ? BadRequest("Team member with given ID doesn't exist") : Ok(member);
+            return member is null ? BadRequest("Team member with given ID doesn't exist") : Ok(member);
         }
 
         [HttpDelete]
@@ -53,7 +55,9 @@ namespace TimeSheet.Controllers
         {
             bool success = await _teamMemberService.DeleteAsync(id);
             if (success)
+            {
                 return Ok();
+            }
             return BadRequest("Team member with given ID doesn't exist");
         }
     }

@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
-using Services.Implementations;
 using Shared;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,8 +28,10 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ActivityDto>> GetById(Guid id)
         {
             var result = await _activityService.GetByIdAsync(id);
-            if (result == null)
+            if (result is null)
+            {
                 return BadRequest("Activity with given ID doesn't exist");
+            }
             return Ok(result);
         }
 
@@ -47,14 +47,14 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ActivityDto>> Add(ActivityCreateDto activityDto)
         {
             var activity = await _activityService.AddAsync(activityDto);
-            return activity == null ? BadRequest() : Ok(activity);
+            return activity is null ? BadRequest() : Ok(activity);
         }
 
         [HttpPut]
         public async Task<ActionResult<ActivityDto>> Update(ActivityUpdateDto activityDto)
         {
             var activity = await _activityService.UpdateAsync(activityDto);
-            return activity == null ? BadRequest("Activity with given ID doesn't exist") : Ok(activity);
+            return activity is null ? BadRequest("Activity with given ID doesn't exist") : Ok(activity);
         }
 
         [HttpDelete]
@@ -63,7 +63,9 @@ namespace TimeSheet.Controllers
         {
             bool success = await _activityService.DeleteAsync(id);
             if (success)
+            {
                 return Ok();
+            }
             return BadRequest("Activity with given ID doesn't exist");
         }
 

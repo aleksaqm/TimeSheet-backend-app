@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
-using Services.Implementations;
 using Shared;
 
 namespace TimeSheet.Controllers
@@ -29,8 +28,10 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ProjectDto>> GetById(Guid id)
         {
             var result = await _projectService.GetByIdAsync(id);
-            if (result == null)
+            if (result is null)
+            {
                 return BadRequest("Project with given ID doesn't exist");
+            }
             return Ok(result);
         }
 
@@ -38,14 +39,14 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ProjectDto>> Add(ProjectCreateDto projectDto)
         {
             var project = await _projectService.AddAsync(projectDto);
-            return project == null ? BadRequest() : Ok(project);
+            return project is null ? BadRequest() : Ok(project);
         }
 
         [HttpPut]
         public async Task<ActionResult<ProjectDto>> Update(ProjectUpdateDto projectDto)
         {
             var project = await _projectService.UpdateAsync(projectDto);
-            return project == null ? BadRequest("Project with given ID doesn't exist") : Ok(project);
+            return project is null ? BadRequest("Project with given ID doesn't exist") : Ok(project);
         }
 
         [HttpDelete]
@@ -54,7 +55,9 @@ namespace TimeSheet.Controllers
         {
             bool success = await _projectService.DeleteAsync(id);
             if (success)
+            {
                 return Ok();
+            }
             return BadRequest("Project with given ID doesn't exist");
         }
 

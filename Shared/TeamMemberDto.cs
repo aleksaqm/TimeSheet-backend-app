@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared
+﻿namespace Shared
 {
     public class TeamMemberDto
     {
@@ -18,8 +11,4 @@ namespace Shared
         public required string Status { get; set; }
     }
 
-    //public enum Role
-    //{
-    //    Admin, Worker
-    //}
 }

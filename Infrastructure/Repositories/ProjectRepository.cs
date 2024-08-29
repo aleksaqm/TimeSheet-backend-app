@@ -1,11 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -47,7 +42,10 @@ namespace Infrastructure.Repositories
         public async Task<bool> DeleteAsync(Guid id)
         {
             var existingProject = await _dbContext.Projects.FindAsync(id);
-            if (existingProject == null) return false;
+            if (existingProject is null) 
+            {
+                return false;
+            };
             _dbContext.Projects.Remove(existingProject);
             await _dbContext.SaveChangesAsync();
             return true;

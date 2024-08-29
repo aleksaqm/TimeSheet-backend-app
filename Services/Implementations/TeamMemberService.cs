@@ -3,12 +3,6 @@ using Domain.Entities;
 using Domain.Repositories;
 using Services.Abstractions;
 using Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Implementations
 {
@@ -32,8 +26,10 @@ namespace Services.Implementations
         public async Task<TeamMemberDto?> GetByIdAsync(Guid id)
         {
             var member = await _repository.GetByIdAsync(id);
-            if (member == null)
+            if (member is null)
+            {
                 return null;
+            }
             return _mapper.Map<TeamMemberDto>(member);
         }
 

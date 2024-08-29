@@ -3,11 +3,6 @@ using Domain.Entities;
 using Domain.Repositories;
 using Services.Abstractions;
 using Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Implementations
 {
@@ -32,7 +27,9 @@ namespace Services.Implementations
         {
             var client = await _repository.GetByIdAsync(id);
             if (client is null)
+            {
                 return null;
+            }
             return _mapper.Map<ClientUpdateDto>(client);
         }
 
