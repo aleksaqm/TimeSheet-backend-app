@@ -1,5 +1,12 @@
+using Domain.Repositories;
+using Infrastructure;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using TimeSheet.Data;
+using Service.Abstractions;
+using Services.Abstractions;
+using Services.Implementations;
+using Services.MappingProfiles;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +17,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddTransient<ITeamMemberRepository, TeamMemberRepository>();
+builder.Services.AddTransient<ITeamMemberService, TeamMemberService>();
+
+builder.Services.AddTransient<IClientRepository, ClientRepository>();
+builder.Services.AddTransient<IClientService, ClientService>();
+
+builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+builder.Services.AddTransient<IProjectService, ProjectService>();
+
+builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
+builder.Services.AddTransient<IActivityService, ActivityService>();
+
+builder.Services.AddDbContext<RepositoryDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 var app = builder.Build();
 
