@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Shared
 {
-    public class WorkDayDto
+    public class DaysHoursResponse
     {
-        public required DateTime Date {  get; set; }
+        public required IEnumerable<DayHours> DayHours { get; set; }
         public required double TotalHours { get; set; }
-        public required List<ActivityDto> Activities { get; set; }
     }
+
+
 }

@@ -1,0 +1,13 @@
+client po imenu i unique ime da bude
+active team members
+
+projectResponse
+response objekti
+
+paginacija
+search
+filter
+reports
+
+srediti datume
+tezi laksi nacin

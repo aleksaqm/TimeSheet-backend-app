@@ -36,19 +36,6 @@ namespace Infrastructure.Repositories
                 .SingleOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<IEnumerable<Activity>> GetByMonth(int year, int month, Guid userId)
-        {
-            return await _dbContext.Activities
-                .Where(a => EF.Property<int>(a, "Year") == year && EF.Property<int>(a, "Month") == month)
-                .Where(a => a.UserId == userId)
-                .Include(t => t.Client)
-                .Include(t => t.Category)
-                .Include(t => t.Project)
-                .Include(t => t.User)
-                    .ThenInclude(t => t.Status)
-                .ToArrayAsync();
-        }
-
         public async Task<IEnumerable<Activity>> GetForOneDay(DateTime day, Guid userId)
         {
             return await _dbContext.Activities
@@ -60,6 +47,19 @@ namespace Infrastructure.Repositories
                 .Include(t => t.User)
                     .ThenInclude(t => t.Status)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Activity>> GetForPeriod(DateTime startDate, DateTime endDate, Guid userId)
+        {
+            var activities = await _dbContext.Activities
+                .Where(a => a.Date.Date >= startDate && a.Date.Date <= endDate)
+                .Include(t => t.Client)
+                .Include(t => t.Category)
+                .Include(t => t.Project)
+                .Include(t => t.User)
+                    .ThenInclude(t => t.Status)
+                .ToArrayAsync();
+            return activities;
         }
 
         public async Task AddAsync(Activity activity)

@@ -33,17 +33,37 @@ namespace Services.Implementations
             return _mapper.Map<ActivityDto>(activity);
         }
 
-        public async Task<IEnumerable<WorkDayDto>> GetByMonth(int year, int month, Guid userId)
-        {
-            //var activities = await _repository.GetByMonth(year, month, userId);
-            var days = await CalculateDays(year, month, userId);
-            return days;
-        }
-
         public async Task<IEnumerable<ActivityDto>> GetForOneDay(DateTime day, Guid userId)
         {
             var activities = await _repository.GetForOneDay(day, userId);
             return _mapper.Map<List<ActivityDto>>(activities);
+        }
+
+        public async Task<IEnumerable<WorkDayDto>> GetActivitiesForPeriod(DateTime startDate, DateTime endDate, Guid userId)
+        {
+            List<WorkDayDto> days = new List<WorkDayDto>();
+            while (startDate.Date <= endDate.Date)
+            {
+                var activities = await _repository.GetForOneDay(startDate, userId);
+                days.Add(new WorkDayDto { Activities = _mapper.Map<List<ActivityDto>>(activities), Date = startDate, TotalHours = CalculateHours(activities) });
+                startDate = startDate.AddDays(1);
+            }
+            return days;
+        }
+
+        public async Task<DaysHoursResponse> GetHoursForPeriod(DateTime startDate, DateTime endDate, Guid userId)
+        {
+            double totalHours = 0;
+            var days = new List<DayHours>();
+            while (startDate.Date <= endDate.Date)
+            {
+                var activities = await _repository.GetForOneDay(startDate, userId);
+                var hours = CalculateHours(activities);
+                days.Add(new DayHours { Date=startDate, Hours = hours });
+                totalHours += hours;
+                startDate = startDate.AddDays(1);
+            }
+            return new DaysHoursResponse { DayHours=days, TotalHours=totalHours};
         }
 
         public async Task<ActivityDto?> AddAsync(ActivityCreateDto activityDto)
@@ -86,19 +106,16 @@ namespace Services.Implementations
              return await _repository.DeleteAsync(id);
         }
 
-        private async Task<List<WorkDayDto>> CalculateDays(int year, int month, Guid userId)
-        {
-            List<WorkDayDto> days = new List<WorkDayDto>();
-            int daysInMonth = DateTime.DaysInMonth(year, month);
-            for (int day = 1; day <= daysInMonth; day++)
-            {
-                var date = new DateTime(year, month, day);
-                var activities = await _repository.GetForOneDay(date, userId);
-                var hours = CalculateHours(activities);
-                days.Add(new WorkDayDto { Date = date, Hours = hours });
-            }
-            return days;
-        }
+        //private async Task<List<WorkDayDto>> CalculateDays(DateTime startDate, DateTime endDate, Guid userId)
+        //{
+        //    List<WorkDayDto> days = new List<WorkDayDto>();
+        //    while (startDate.Date <= endDate.Date)
+        //    {
+        //        var activities = await _repository.GetForOneDay(startDate, userId);
+        //        days.Add(new WorkDayDto { Activities = _mapper.Map<List<ActivityDto>>(activities), Date = startDate, TotalHours = CalculateHours(activities) });
+        //    }
+        //    return days;
+        //}
 
         private double CalculateHours(IEnumerable<Activity> activities)
         {
@@ -113,6 +130,7 @@ namespace Services.Implementations
             }
             return hours;
         }
+
         
     }
 }
