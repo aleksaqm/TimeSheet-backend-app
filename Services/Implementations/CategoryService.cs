@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Helpers;
+using Domain.QueryStrings;
 using Domain.Repositories;
 using Service.Abstractions;
 using Shared;
@@ -17,10 +19,15 @@ namespace Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CategoryUpdateDto>> GetAllAsync()
+        public async Task<PaginatedList<CategoryUpdateDto>> GetAllAsync(QueryStringParameters parameters)
         {
-            var categories = await _repository.GetAllAsync();
-            return _mapper.Map<List<CategoryUpdateDto>>(categories);
+            var categories = await _repository.GetAllAsync(parameters);
+            var mapped = _mapper.Map<PaginatedList<CategoryUpdateDto>>(categories);
+            mapped.CurrentPage = categories.CurrentPage;
+            mapped.TotalCount = categories.TotalCount;
+            mapped.PageSize = categories.PageSize;
+            mapped.TotalPages = categories.TotalPages;
+            return mapped;
         }
 
         public async Task<CategoryUpdateDto?> GetByIdAsync(Guid id)

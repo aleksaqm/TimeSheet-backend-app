@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.QueryStrings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Service.Abstractions;
 using Shared;
 
@@ -17,8 +19,20 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CategoryUpdateDto>>> GetAll() { 
-            var results = await _categoryService.GetAllAsync();
+        public async Task<ActionResult<List<CategoryUpdateDto>>> GetAll([FromQuery] QueryStringParameters parameters) { 
+            var results = await _categoryService.GetAllAsync(parameters);
+
+            var metadata = new
+            {
+                results.TotalCount,
+                results.PageSize,
+                results.CurrentPage,
+                results.HasNext,
+                results.HasPrevious
+            };
+
+            Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
+
             return Ok(results);
         }
 
