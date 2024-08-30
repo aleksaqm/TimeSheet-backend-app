@@ -26,6 +26,14 @@ namespace Infrastructure.Repositories
                 .SingleOrDefaultAsync(t => t.Id == id);
         }
 
+        public async Task<IEnumerable<TeamMember>> GetActive()
+        {
+            return await _dbContext.TeamMembers
+                .Where(t => t.Status.StatusName == "Active")
+                .Include(t => t.Status)
+                .ToArrayAsync();
+        }
+
         public async Task AddAsync(TeamMember member)
         {
             await _dbContext.TeamMembers.AddAsync(member);
@@ -48,5 +56,7 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return true;
         }
+
+        
     }
 }

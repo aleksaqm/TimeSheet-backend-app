@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryDbContext))]
-    [Migration("20240827130411_initial migration")]
+    [Migration("20240830070644_initial migration")]
     partial class initialmigration
     {
         /// <inheritdoc />
@@ -46,6 +46,11 @@ namespace Infrastructure.Migrations
                     b.Property<double>("Hours")
                         .HasColumnType("float");
 
+                    b.Property<int>("Month")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("MONTH([Date])");
+
                     b.Property<double?>("Overtime")
                         .HasColumnType("float");
 
@@ -55,15 +60,24 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Year")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("YEAR([Date])");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("Date");
+
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Year", "Month");
 
                     b.ToTable("Activities");
                 });
@@ -103,13 +117,16 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Clients");
                 });
@@ -267,7 +284,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Status");

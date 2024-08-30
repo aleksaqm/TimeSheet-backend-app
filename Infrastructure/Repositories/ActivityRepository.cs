@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infrastructure.Repositories
 {
@@ -35,6 +36,32 @@ namespace Infrastructure.Repositories
                 .SingleOrDefaultAsync(t => t.Id == id);
         }
 
+        public async Task<IEnumerable<Activity>> GetByMonth(int year, int month, Guid userId)
+        {
+            return await _dbContext.Activities
+                .Where(a => EF.Property<int>(a, "Year") == year && EF.Property<int>(a, "Month") == month)
+                .Where(a => a.UserId == userId)
+                .Include(t => t.Client)
+                .Include(t => t.Category)
+                .Include(t => t.Project)
+                .Include(t => t.User)
+                    .ThenInclude(t => t.Status)
+                .ToArrayAsync();
+        }
+
+        public async Task<IEnumerable<Activity>> GetForOneDay(DateTime day, Guid userId)
+        {
+            return await _dbContext.Activities
+                .Where(a => a.Date.Date == day.Date)
+                .Where (a => a.UserId == userId)
+                .Include(t => t.Client)
+                .Include(t => t.Category)
+                .Include(t => t.Project)
+                .Include(t => t.User)
+                    .ThenInclude(t => t.Status)
+                .ToListAsync();
+        }
+
         public async Task AddAsync(Activity activity)
         {
             await _dbContext.Activities.AddAsync(activity);
@@ -57,5 +84,7 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return true;
         }
+
+        
     }
 }

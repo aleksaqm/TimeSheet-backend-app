@@ -6,6 +6,7 @@ namespace Services.Abstractions
     {
         Task<TeamMemberDto?> GetByIdAsync(Guid id);
         Task<IEnumerable<TeamMemberDto>> GetAllAsync();
+        Task<IEnumerable<TeamMemberDto>> GetActive();
         Task<TeamMemberDto?> AddAsync(TeamMemberCreateDto teamMemberDto);
         Task<TeamMemberDto?> UpdateAsync(TeamMemberDto teamMemberDto);
         Task<bool> DeleteAsync(Guid id);

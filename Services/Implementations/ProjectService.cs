@@ -33,6 +33,12 @@ namespace Services.Implementations
             return _mapper.Map<ProjectDto>(project);
         }
 
+        public async Task<IEnumerable<ProjectDto>> GetByStatus(string status)
+        {
+            var projects = await _repository.GetByStatus(status);
+            return _mapper.Map<List<ProjectDto>>(projects);
+        }
+
         public async Task<ProjectDto?> AddAsync(ProjectCreateDto projectDto)
         {
             var project = _mapper.Map<Project>(projectDto);
@@ -70,5 +76,7 @@ namespace Services.Implementations
         {
             return await _repository.DeleteAsync(id);
         }
+
+        
     }
 }

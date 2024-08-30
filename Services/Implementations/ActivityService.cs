@@ -33,6 +33,19 @@ namespace Services.Implementations
             return _mapper.Map<ActivityDto>(activity);
         }
 
+        public async Task<IEnumerable<WorkDayDto>> GetByMonth(int year, int month, Guid userId)
+        {
+            //var activities = await _repository.GetByMonth(year, month, userId);
+            var days = await CalculateDays(year, month, userId);
+            return days;
+        }
+
+        public async Task<IEnumerable<ActivityDto>> GetForOneDay(DateTime day, Guid userId)
+        {
+            var activities = await _repository.GetForOneDay(day, userId);
+            return _mapper.Map<List<ActivityDto>>(activities);
+        }
+
         public async Task<ActivityDto?> AddAsync(ActivityCreateDto activityDto)
         {
             var activity = _mapper.Map<Activity>(activityDto);
@@ -72,5 +85,34 @@ namespace Services.Implementations
         {
              return await _repository.DeleteAsync(id);
         }
+
+        private async Task<List<WorkDayDto>> CalculateDays(int year, int month, Guid userId)
+        {
+            List<WorkDayDto> days = new List<WorkDayDto>();
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                var date = new DateTime(year, month, day);
+                var activities = await _repository.GetForOneDay(date, userId);
+                var hours = CalculateHours(activities);
+                days.Add(new WorkDayDto { Date = date, Hours = hours });
+            }
+            return days;
+        }
+
+        private double CalculateHours(IEnumerable<Activity> activities)
+        {
+            double hours = 0;
+            foreach (var activity in activities)
+            {
+                hours += activity.Hours;
+                if (activity.Overtime != null)
+                {
+                    hours += (double) activity.Overtime;
+                }
+            }
+            return hours;
+        }
+        
     }
 }

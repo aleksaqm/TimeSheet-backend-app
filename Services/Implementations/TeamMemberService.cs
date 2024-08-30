@@ -33,6 +33,12 @@ namespace Services.Implementations
             return _mapper.Map<TeamMemberDto>(member);
         }
 
+        public async Task<IEnumerable<TeamMemberDto>> GetActive()
+        {
+            var members = await _repository.GetActive();
+            return _mapper.Map<List<TeamMemberDto>>(members);
+        }
+
         public async Task<TeamMemberDto?> AddAsync(TeamMemberCreateDto teamMemberDto)
         {
             var member = _mapper.Map<TeamMember>(teamMemberDto);
@@ -69,5 +75,7 @@ namespace Services.Implementations
         {
             return await _repository.DeleteAsync(id);
         }
+
+        
     }
 }

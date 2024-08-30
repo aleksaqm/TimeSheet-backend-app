@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
@@ -33,6 +34,14 @@ namespace TimeSheet.Controllers
                 return BadRequest("Project with given ID doesn't exist");
             }
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("Status")]
+        public async Task<ActionResult<List<ProjectDto>>> GetByStatus([Required] string status)
+        {
+            var results = await _projectService.GetAllAsync();
+            return Ok(results);
         }
 
         [HttpPost]

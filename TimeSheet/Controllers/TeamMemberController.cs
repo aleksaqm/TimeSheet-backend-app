@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
@@ -33,6 +34,14 @@ namespace TimeSheet.Controllers
                 return BadRequest("Team member with given ID doesn't exist");
             }
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("Active")]
+        public async Task<ActionResult<List<TeamMemberDto>>> GetActive()
+        {
+            var results = await _teamMemberService.GetActive();
+            return Ok(results);
         }
 
         [HttpPost]

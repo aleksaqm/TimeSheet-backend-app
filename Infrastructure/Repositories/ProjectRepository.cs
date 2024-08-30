@@ -28,6 +28,17 @@ namespace Infrastructure.Repositories
                 .SingleOrDefaultAsync(t => t.Id == id);
         }
 
+        public async Task<IEnumerable<Project>> GetByStatus(string status)
+        {
+            var projects = await _dbContext.Projects
+                .Where(t => t.Status.StatusName == status)
+                .Include(t => t.Status)
+                .Include(t => t.Customer)
+                .Include(t => t.Lead)
+                .ToArrayAsync();
+            return projects;
+        }
+
         public async Task AddAsync(Project project)
         {
             await _dbContext.Projects.AddAsync(project);
@@ -50,5 +61,7 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return true;
         }
+
+        
     }
 }

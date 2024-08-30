@@ -36,10 +36,18 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        [Route("ByMonth")]
-        public async Task<ActionResult<List<ActivityDto>>> GetByMonth([Required] int year, [Required] int month)
+        [Route("Month")]
+        public async Task<ActionResult<List<WorkDayDto>>> GetByMonth([Required] int year, [Required] int month, [Required] Guid userId)
         {
-            var results = await _activityService.GetAllAsync();
+            var results = await _activityService.GetByMonth(year, month, userId);
+            return Ok(results);
+        }
+
+        [HttpGet]
+        [Route("Day")]
+        public async Task<ActionResult<List<ActivityDto>>> GetForOnaDay([Required] DateTime day, [Required] Guid userId)
+        {
+            var results = await _activityService.GetForOneDay(day, userId);
             return Ok(results);
         }
 

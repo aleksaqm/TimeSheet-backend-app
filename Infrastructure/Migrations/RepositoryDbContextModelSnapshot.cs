@@ -43,6 +43,11 @@ namespace Infrastructure.Migrations
                     b.Property<double>("Hours")
                         .HasColumnType("float");
 
+                    b.Property<int>("Month")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("MONTH([Date])");
+
                     b.Property<double?>("Overtime")
                         .HasColumnType("float");
 
@@ -52,15 +57,24 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Year")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("int")
+                        .HasComputedColumnSql("YEAR([Date])");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("Date");
+
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Year", "Month");
 
                     b.ToTable("Activities");
                 });
@@ -100,13 +114,16 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Clients");
                 });
