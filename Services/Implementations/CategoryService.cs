@@ -21,6 +21,10 @@ namespace Services.Implementations
 
         public async Task<PaginatedList<CategoryUpdateDto>> GetAllAsync(QueryStringParameters parameters)
         {
+            if(parameters.SearchText is null)
+            {
+                parameters.SearchText = string.Empty;
+            }
             var categories = await _repository.GetAllAsync(parameters);
             var mapped = _mapper.Map<PaginatedList<CategoryUpdateDto>>(categories);
             mapped.CurrentPage = categories.CurrentPage;

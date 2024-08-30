@@ -18,7 +18,12 @@ namespace Infrastructure.Repositories
 
         public async Task<PaginatedList<Category>> GetAllAsync(QueryStringParameters parameters)
         {
-            var allCategories = await _dbContext.Categories.ToArrayAsync();
+            //var allCategories = await _dbContext.Categories
+            //    .Where(a => a.Name.Contains(parameters.SearchText) && a.Name.StartsWith("A"))
+            //    .ToArrayAsync();
+            var allCategories = await _dbContext.Categories
+                .Where(a => a.Name.StartsWith("A") && a.Name.Contains(parameters.SearchText))
+                .ToArrayAsync();
             var allCategoriesQuarriable = allCategories.AsQueryable();
             var categories = PaginatedList<Category>.ToPagedList(allCategoriesQuarriable, parameters.PageNumber, parameters.PageSize);
             return categories;
