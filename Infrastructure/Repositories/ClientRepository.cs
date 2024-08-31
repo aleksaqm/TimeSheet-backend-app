@@ -1,4 +1,6 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
+using Domain.QueryStrings;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +15,14 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-        public async Task<IEnumerable<Client>> GetAllAsync()
+        public async Task<PaginatedList<Client>> GetAllAsync(QueryStringParameters parameters)
         {
-            var clients = await _dbContext.Clients.ToArrayAsync();
+            var allClients = await _dbContext.Clients
+                .Where(a => a.Name.StartsWith(parameters.FirstLetter) && a.Name.Contains(parameters.SearchText))
+                .ToListAsync();
+            var allClientsQuerriable = allClients.AsQueryable();
+            var clients =
+                PaginatedList<Client>.ToPagedList(allClientsQuerriable, parameters.PageNumber, parameters.PageSize);
             return clients;
         }
 

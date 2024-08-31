@@ -1,14 +1,16 @@
-﻿using Shared;
+﻿using Domain.Helpers;
+using Domain.QueryStrings;
+using Shared;
 
 namespace Services.Abstractions
 {
     public interface ITeamMemberService
     {
-        Task<TeamMemberDto?> GetByIdAsync(Guid id);
-        Task<IEnumerable<TeamMemberDto>> GetAllAsync();
-        Task<IEnumerable<TeamMemberDto>> GetActive();
-        Task<TeamMemberDto?> AddAsync(TeamMemberCreateDto teamMemberDto);
-        Task<TeamMemberDto?> UpdateAsync(TeamMemberDto teamMemberDto);
+        Task<TeamMemberResponse?> GetByIdAsync(Guid id);
+        Task<PaginatedList<TeamMemberResponse>> GetAllAsync(QueryStringParameters parameters);
+        Task<IEnumerable<TeamMemberResponse>> GetActive();
+        Task<TeamMemberResponse?> AddAsync(TeamMemberCreateDto teamMemberDto);
+        Task<TeamMemberResponse?> UpdateAsync(TeamMemberUpdateDto teamMemberDto);
         Task<bool> DeleteAsync(Guid id);
     }
 }

@@ -6,10 +6,10 @@ namespace Service.Abstractions
 {
     public interface ICategoryService
     {
-        Task<CategoryUpdateDto?> GetByIdAsync(Guid id);
-        Task<PaginatedList<CategoryUpdateDto>> GetAllAsync(QueryStringParameters parameters);
-        Task<CategoryUpdateDto?> AddAsync(CategoryCreateDto categoryDto);
-        Task<CategoryUpdateDto?> UpdateAsync(CategoryUpdateDto categoryDto);
+        Task<CategoryResponse?> GetByIdAsync(Guid id);
+        Task<PaginatedList<CategoryResponse>> GetAllAsync(QueryStringParameters parameters);
+        Task<CategoryResponse?> AddAsync(CategoryCreateDto categoryDto);
+        Task<CategoryResponse?> UpdateAsync(CategoryUpdateDto categoryDto);
         Task<bool> DeleteAsync(Guid id);
     }
 }

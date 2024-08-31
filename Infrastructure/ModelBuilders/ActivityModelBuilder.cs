@@ -57,14 +57,10 @@ namespace Infrastructure.ModelBuilders
             _modelBuilder.Entity<Activity>()
                 .Property<int>("Month")
                 .HasComputedColumnSql("MONTH([Date])");
-            //_modelBuilder.Entity<Activity>()
-            //    .Property<int>("WeekNumber")
-            //    .HasComputedColumnSql("DATEPART(WEEK, [Date]");
+
 
             _modelBuilder.Entity<Activity>()
                 .HasIndex("Year", "Month");
-            //_modelBuilder.Entity<Activity>()
-            //    .HasIndex("Year", "WeekNumber");
             _modelBuilder.Entity<Activity>()
                 .HasIndex(a => a.Date);
         }

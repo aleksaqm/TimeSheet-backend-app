@@ -10,6 +10,6 @@ namespace Shared
     {
         public required DateTime Date {  get; set; }
         public required double TotalHours { get; set; }
-        public required List<ActivityDto> Activities { get; set; }
+        public required List<ActivityResponse> Activities { get; set; }
     }
 }

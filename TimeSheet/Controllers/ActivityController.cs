@@ -17,7 +17,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ActivityDto>>> GetAll()
+        public async Task<ActionResult<List<ActivityResponse>>> GetAll()
         {
             var results = await _activityService.GetAllAsync();
             return Ok(results);
@@ -25,7 +25,7 @@ namespace TimeSheet.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
-        public async Task<ActionResult<ActivityDto>> GetById(Guid id)
+        public async Task<ActionResult<ActivityResponse>> GetById(Guid id)
         {
             var result = await _activityService.GetByIdAsync(id);
             if (result is null)
@@ -52,14 +52,14 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ActivityDto>> Add(ActivityCreateDto activityDto)
+        public async Task<ActionResult<ActivityResponse>> Add(ActivityCreateDto activityDto)
         {
             var activity = await _activityService.AddAsync(activityDto);
             return activity is null ? BadRequest() : Ok(activity);
         }
 
         [HttpPut]
-        public async Task<ActionResult<ActivityDto>> Update(ActivityUpdateDto activityDto)
+        public async Task<ActionResult<ActivityResponse>> Update(ActivityUpdateDto activityDto)
         {
             var activity = await _activityService.UpdateAsync(activityDto);
             return activity is null ? BadRequest("Activity with given ID doesn't exist") : Ok(activity);

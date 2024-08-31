@@ -19,7 +19,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CategoryUpdateDto>>> GetAll([FromQuery] QueryStringParameters parameters) { 
+        public async Task<ActionResult<List<CategoryResponse>>> GetAll([FromQuery] QueryStringParameters parameters) { 
             var results = await _categoryService.GetAllAsync(parameters);
 
             var metadata = new
@@ -38,7 +38,7 @@ namespace TimeSheet.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
-        public async Task<ActionResult<CategoryUpdateDto>> GetById(Guid id) {
+        public async Task<ActionResult<CategoryResponse>> GetById(Guid id) {
             var result = await _categoryService.GetByIdAsync(id);
             if (result is null)
             {
@@ -48,13 +48,13 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryUpdateDto>> Add(CategoryCreateDto categoryDto) { 
+        public async Task<ActionResult<CategoryResponse>> Add(CategoryCreateDto categoryDto) { 
             var category = await _categoryService.AddAsync(categoryDto);
             return category is null ? BadRequest() : Ok(category);
         }
 
         [HttpPut]
-        public async Task<ActionResult<CategoryUpdateDto>> Update(CategoryUpdateDto categoryDto) { 
+        public async Task<ActionResult<CategoryResponse>> Update(CategoryUpdateDto categoryDto) { 
             var category = await _categoryService.UpdateAsync(categoryDto);
             return category is null ? BadRequest("Category with given ID doesn't exist") : Ok(category);
         }

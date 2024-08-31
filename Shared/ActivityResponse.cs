@@ -1,6 +1,6 @@
 ﻿namespace Shared
 {
-    public class ActivityDto
+    public class ActivityResponse
     {
         public Guid Id { get; set; }
         public DateTime Date {  get; set; }
@@ -10,6 +10,6 @@
         public string? Description { get; set; }
         public double Hours {  get; set; }
         public double? Overtime { get; set; }
-        public required TeamMemberDto User { get; set; }
+        public required TeamMemberUpdateDto User { get; set; }
     }
 }

@@ -1,14 +1,16 @@
-﻿using Shared;
+﻿using Domain.Helpers;
+using Domain.QueryStrings;
+using Shared;
 
 namespace Services.Abstractions
 {
     public interface IProjectService
     {
-        Task<ProjectDto?> GetByIdAsync(Guid id);
-        Task<IEnumerable<ProjectDto>> GetAllAsync();
-        Task<IEnumerable<ProjectDto>> GetByStatus(string status);
-        Task<ProjectDto?> AddAsync(ProjectCreateDto projectDto);
-        Task<ProjectDto?> UpdateAsync(ProjectUpdateDto projectDto);
+        Task<ProjectResponse?> GetByIdAsync(Guid id);
+        Task<PaginatedList<ProjectResponse>> GetAllAsync(QueryStringParameters parameters);
+        Task<IEnumerable<ProjectResponse>> GetByStatus(string status);
+        Task<ProjectResponse?> AddAsync(ProjectCreateDto projectDto);
+        Task<ProjectResponse?> UpdateAsync(ProjectUpdateDto projectDto);
         Task<bool> DeleteAsync(Guid id);
     }
 }

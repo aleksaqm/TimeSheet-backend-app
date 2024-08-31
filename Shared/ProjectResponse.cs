@@ -1,6 +1,6 @@
 ﻿namespace Shared
 {
-    public class ProjectDto
+    public class ProjectResponse
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }

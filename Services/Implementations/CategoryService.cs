@@ -19,14 +19,12 @@ namespace Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<PaginatedList<CategoryUpdateDto>> GetAllAsync(QueryStringParameters parameters)
+        public async Task<PaginatedList<CategoryResponse>> GetAllAsync(QueryStringParameters parameters)
         {
-            if(parameters.SearchText is null)
-            {
-                parameters.SearchText = string.Empty;
-            }
+            parameters.SearchText ??= string.Empty;
+            parameters.FirstLetter ??= string.Empty;
             var categories = await _repository.GetAllAsync(parameters);
-            var mapped = _mapper.Map<PaginatedList<CategoryUpdateDto>>(categories);
+            var mapped = _mapper.Map<PaginatedList<CategoryResponse>>(categories);
             mapped.CurrentPage = categories.CurrentPage;
             mapped.TotalCount = categories.TotalCount;
             mapped.PageSize = categories.PageSize;
@@ -34,23 +32,23 @@ namespace Services.Implementations
             return mapped;
         }
 
-        public async Task<CategoryUpdateDto?> GetByIdAsync(Guid id)
+        public async Task<CategoryResponse?> GetByIdAsync(Guid id)
         {
             var category = await _repository.GetByIdAsync(id);
             if (category is null)
             {
                 return null;
             }
-            return _mapper.Map<CategoryUpdateDto>(category);
+            return _mapper.Map<CategoryResponse>(category);
         }
 
-        public async Task<CategoryUpdateDto?> AddAsync(CategoryCreateDto categoryDto)
+        public async Task<CategoryResponse?> AddAsync(CategoryCreateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
             try
             {
                 await _repository.AddAsync(category);
-                return _mapper.Map<CategoryUpdateDto>(category);
+                return _mapper.Map<CategoryResponse>(category);
             }
             catch (Exception)
             {
@@ -58,7 +56,7 @@ namespace Services.Implementations
             }
         }
 
-        public async Task<CategoryUpdateDto?> UpdateAsync(CategoryUpdateDto categoryDto)
+        public async Task<CategoryResponse?> UpdateAsync(CategoryUpdateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
             var existingCategory = await _repository.GetByIdAsync(category.Id);
@@ -68,7 +66,7 @@ namespace Services.Implementations
             }
             existingCategory.Name = category.Name;
             await _repository.UpdateAsync();
-            return _mapper.Map<CategoryUpdateDto>(existingCategory);
+            return _mapper.Map<CategoryResponse>(existingCategory);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

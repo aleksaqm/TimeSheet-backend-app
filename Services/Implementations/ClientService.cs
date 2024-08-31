@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Helpers;
+using Domain.QueryStrings;
 using Domain.Repositories;
 using Services.Abstractions;
 using Shared;
@@ -17,29 +19,36 @@ namespace Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ClientUpdateDto>> GetAllAsync()
+        public async Task<PaginatedList<ClientResponse>> GetAllAsync(QueryStringParameters parameters)
         {
-            var clients = await _repository.GetAllAsync();
-            return _mapper.Map<List<ClientUpdateDto>>(clients);
+            parameters.SearchText ??= string.Empty;
+            parameters.FirstLetter ??= string.Empty;
+            var clients = await _repository.GetAllAsync(parameters);
+            var mapped = _mapper.Map<PaginatedList<ClientResponse>>(clients);
+            mapped.CurrentPage = clients.CurrentPage;
+            mapped.TotalCount = clients.TotalCount;
+            mapped.PageSize = clients.PageSize;
+            mapped.TotalPages = clients.TotalPages;
+            return mapped;
         }
 
-        public async Task<ClientUpdateDto?> GetByIdAsync(Guid id)
+        public async Task<ClientResponse?> GetByIdAsync(Guid id)
         {
             var client = await _repository.GetByIdAsync(id);
             if (client is null)
             {
                 return null;
             }
-            return _mapper.Map<ClientUpdateDto>(client);
+            return _mapper.Map<ClientResponse>(client);
         }
 
-        public async Task<ClientUpdateDto?> AddAsync(ClientCreateDto clientDto)
+        public async Task<ClientResponse?> AddAsync(ClientCreateDto clientDto)
         {
             var client = _mapper.Map<Client>(clientDto);
             try
             {
                 await _repository.AddAsync(client);
-                return _mapper.Map<ClientUpdateDto>(client);
+                return _mapper.Map<ClientResponse>(client);
             }
             catch (Exception)
             {
@@ -47,7 +56,7 @@ namespace Services.Implementations
             }
         }
 
-        public async Task<ClientUpdateDto?> UpdateAsync(ClientUpdateDto clientDto)
+        public async Task<ClientResponse?> UpdateAsync(ClientUpdateDto clientDto)
         {
             var client = _mapper.Map<Client>(clientDto);
             var existingClient = await _repository.GetByIdAsync(client.Id);
@@ -61,7 +70,7 @@ namespace Services.Implementations
             existingClient.PostalCode = clientDto.PostalCode;
             existingClient.Country = clientDto.Country;
             await _repository.UpdateAsync();
-            return _mapper.Map<ClientUpdateDto>(existingClient);
+            return _mapper.Map<ClientResponse>(existingClient);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

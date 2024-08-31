@@ -24,7 +24,7 @@ namespace Domain.QueryStrings
             }
         }
         public string? SearchText { get; set; }
-        public char? FirstLetter { get; set; }
+        public string? FirstLetter { get; set; }
 
     }
 }

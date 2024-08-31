@@ -1,4 +1,6 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
+using Domain.QueryStrings;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +15,16 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-        public async Task<IEnumerable<Project>> GetAllAsync()
+        public async Task<PaginatedList<Project>> GetAllAsync(QueryStringParameters parameters)
         {
-            var projects = await _dbContext.Projects.Include(t => t.Status).Include(t => t.Customer).Include(t => t.Lead).ToArrayAsync();
+            var allProjects = await _dbContext.Projects
+                .Where(a => a.Name.StartsWith(parameters.FirstLetter) && a.Name.Contains(parameters.SearchText))
+                .Include(t => t.Status)
+                .Include(t => t.Customer)
+                .Include(t => t.Lead)
+                .ToListAsync();
+            var allProjectsQuarriable = allProjects.AsQueryable();
+            var projects = PaginatedList<Project>.ToPagedList(allProjectsQuarriable, parameters.PageNumber, parameters.PageSize);
             return projects;
         }
 

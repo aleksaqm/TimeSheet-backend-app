@@ -17,26 +17,26 @@ namespace Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ActivityDto>> GetAllAsync()
+        public async Task<IEnumerable<ActivityResponse>> GetAllAsync()
         {
             var activities = await _repository.GetAllAsync();
-            return _mapper.Map<List<ActivityDto>>(activities);
+            return _mapper.Map<List<ActivityResponse>>(activities);
         }
 
-        public async Task<ActivityDto?> GetByIdAsync(Guid id)
+        public async Task<ActivityResponse?> GetByIdAsync(Guid id)
         {
             var activity = await _repository.GetByIdAsync(id);
             if (activity is null)
             {
                 return null;
             }
-            return _mapper.Map<ActivityDto>(activity);
+            return _mapper.Map<ActivityResponse>(activity);
         }
 
-        public async Task<IEnumerable<ActivityDto>> GetForOneDay(DateTime day, Guid userId)
+        public async Task<IEnumerable<ActivityResponse>> GetForOneDay(DateTime day, Guid userId)
         {
             var activities = await _repository.GetForOneDay(day, userId);
-            return _mapper.Map<List<ActivityDto>>(activities);
+            return _mapper.Map<List<ActivityResponse>>(activities);
         }
 
         public async Task<IEnumerable<WorkDayDto>> GetActivitiesForPeriod(DateTime startDate, DateTime endDate, Guid userId)
@@ -45,7 +45,7 @@ namespace Services.Implementations
             while (startDate.Date <= endDate.Date)
             {
                 var activities = await _repository.GetForOneDay(startDate, userId);
-                days.Add(new WorkDayDto { Activities = _mapper.Map<List<ActivityDto>>(activities), Date = startDate, TotalHours = CalculateHours(activities) });
+                days.Add(new WorkDayDto { Activities = _mapper.Map<List<ActivityResponse>>(activities), Date = startDate, TotalHours = CalculateHours(activities) });
                 startDate = startDate.AddDays(1);
             }
             return days;
@@ -66,14 +66,14 @@ namespace Services.Implementations
             return new DaysHoursResponse { DayHours=days, TotalHours=totalHours};
         }
 
-        public async Task<ActivityDto?> AddAsync(ActivityCreateDto activityDto)
+        public async Task<ActivityResponse?> AddAsync(ActivityCreateDto activityDto)
         {
             var activity = _mapper.Map<Activity>(activityDto);
             try
             {
                 await _repository.AddAsync(activity);
                 var fullActivity = await _repository.GetByIdAsync(activity.Id);
-                return _mapper.Map<ActivityDto>(fullActivity);
+                return _mapper.Map<ActivityResponse>(fullActivity);
             }
             catch (Exception)
             {
@@ -81,7 +81,7 @@ namespace Services.Implementations
             }
         }
 
-        public async Task<ActivityDto?> UpdateAsync(ActivityUpdateDto activityDto)
+        public async Task<ActivityResponse?> UpdateAsync(ActivityUpdateDto activityDto)
         {
             var activity = _mapper.Map<Activity>(activityDto);
             var existingActivity = await _repository.GetByIdAsync(activity.Id);
@@ -98,7 +98,7 @@ namespace Services.Implementations
             existingActivity.Hours = activity.Hours;
             existingActivity.Overtime = activity.Overtime;
             await _repository.UpdateAsync();
-            return _mapper.Map<ActivityDto>(existingActivity);
+            return _mapper.Map<ActivityResponse>(existingActivity);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
