@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infrastructure.Repositories
@@ -85,6 +86,32 @@ namespace Infrastructure.Repositories
             return true;
         }
 
-        
+        public async Task<IEnumerable<Activity>> GetForReport(GetReportDto reportFilter)
+        {
+            var query = _dbContext.Activities.AsQueryable();
+            if (reportFilter.TeamMemberId.HasValue)
+            {
+                query = query.Where(a => a.UserId == reportFilter.TeamMemberId.Value);
+            }
+            if (reportFilter.ClientId.HasValue)
+            {
+                query = query.Where(a => a.ClientId == reportFilter.ClientId.Value);
+            }
+            if (reportFilter.ProjectId.HasValue)
+            {
+                query = query.Where(a => a.ProjectId == reportFilter.ProjectId.Value);
+            }
+            if (reportFilter.CategoryId.HasValue)
+            {
+                query = query.Where(a => a.CategoryId == reportFilter.CategoryId.Value);
+            }
+            query = query.Where(a => a.Date >= reportFilter.StartDate && a.Date <= reportFilter.EndDate);
+            query = query
+                .Include(a => a.Client)
+                .Include(a => a.Category)
+                .Include(a => a.Project)
+                .Include(a => a.User);
+            return await query.ToListAsync();
+        }
     }
 }

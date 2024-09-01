@@ -77,7 +77,13 @@ namespace TimeSheet.Controllers
             return BadRequest("Activity with given ID doesn't exist");
         }
 
-
+        [HttpGet]
+        [Route("Report")]
+        public async Task<ActionResult<ReportResponse>> GetReport([FromQuery]GetReportDto reportDto)
+        {
+            var result = await _activityService.GetReportAsync(reportDto);
+            return Ok(result);
+        }
 
     }
 }

@@ -106,16 +106,19 @@ namespace Services.Implementations
              return await _repository.DeleteAsync(id);
         }
 
-        //private async Task<List<WorkDayDto>> CalculateDays(DateTime startDate, DateTime endDate, Guid userId)
-        //{
-        //    List<WorkDayDto> days = new List<WorkDayDto>();
-        //    while (startDate.Date <= endDate.Date)
-        //    {
-        //        var activities = await _repository.GetForOneDay(startDate, userId);
-        //        days.Add(new WorkDayDto { Activities = _mapper.Map<List<ActivityDto>>(activities), Date = startDate, TotalHours = CalculateHours(activities) });
-        //    }
-        //    return days;
-        //}
+        public async Task<ReportResponse> GetReportAsync(GetReportDto reportDto)
+        {
+            var activities = await _repository.GetForReport(reportDto);
+            var activityDtos = _mapper.Map<List<ActivityDto>>(activities);
+            double reportTotal = activityDtos.Sum(activity => activity.Time);
+            return new ReportResponse
+            {
+                Activities = activityDtos,
+                ReportTotal = reportTotal
+            };
+        }
+
+
 
         private double CalculateHours(IEnumerable<Activity> activities)
         {

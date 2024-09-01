@@ -12,5 +12,6 @@ namespace Services.Abstractions
         Task<ActivityResponse?> AddAsync(ActivityCreateDto activityDto);
         Task<ActivityResponse?> UpdateAsync(ActivityUpdateDto activityDto);
         Task<bool> DeleteAsync(Guid id);
+        Task<ReportResponse> GetReportAsync(GetReportDto reportDto);
     }
 }
