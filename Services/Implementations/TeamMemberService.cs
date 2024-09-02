@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Helpers;
 using Domain.QueryStrings;
 using Domain.Repositories;
@@ -35,7 +36,7 @@ namespace Services.Implementations
             var member = await _repository.GetByIdAsync(id);
             if (member is null)
             {
-                return null;
+                throw new TeamMemberNotFoundException("Team member with given ID doesnt exist");
             }
             return _mapper.Map<TeamMemberResponse>(member);
         }
@@ -49,15 +50,8 @@ namespace Services.Implementations
         public async Task<TeamMemberResponse?> AddAsync(TeamMemberCreateDto teamMemberDto)
         {
             var member = _mapper.Map<TeamMember>(teamMemberDto);
-            try
-            {
-                await _repository.AddAsync(member);
-                return _mapper.Map<TeamMemberResponse>(member);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            await _repository.AddAsync(member);
+            return _mapper.Map<TeamMemberResponse>(member);
         }
 
         public async Task<TeamMemberResponse?> UpdateAsync(TeamMemberUpdateDto teamMemberDto)
@@ -66,7 +60,7 @@ namespace Services.Implementations
             var existingMember = await _repository.GetByIdAsync(member.Id);
             if (existingMember is null)
             {
-                return null;
+                throw new TeamMemberNotFoundException("Team member with given ID doesnt exist");
             }
             existingMember.Name = member.Name;
             existingMember.Username = member.Username;
@@ -80,9 +74,14 @@ namespace Services.Implementations
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            return await _repository.DeleteAsync(id);
+            bool success = await _repository.DeleteAsync(id);
+            if (success)
+            {
+                return true;
+            }
+            throw new TeamMemberNotFoundException("Team member with given ID doesnt exist");
         }
 
-        
+
     }
 }

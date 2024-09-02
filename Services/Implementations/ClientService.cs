@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Helpers;
 using Domain.QueryStrings;
 using Domain.Repositories;
+using Domain.Exceptions;
 using Services.Abstractions;
 using Shared;
 
@@ -35,7 +36,7 @@ namespace Services.Implementations
             var client = await _repository.GetByIdAsync(id);
             if (client is null)
             {
-                return null;
+                throw new ClientNotFoundException("Client with given ID doesnt exist.");
             }
             return _mapper.Map<ClientResponse>(client);
         }
@@ -43,15 +44,8 @@ namespace Services.Implementations
         public async Task<ClientResponse?> AddAsync(ClientCreateDto clientDto)
         {
             var client = _mapper.Map<Client>(clientDto);
-            try
-            {
-                await _repository.AddAsync(client);
-                return _mapper.Map<ClientResponse>(client);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            await _repository.AddAsync(client);
+            return _mapper.Map<ClientResponse>(client);
         }
 
         public async Task<ClientResponse?> UpdateAsync(ClientUpdateDto clientDto)
@@ -60,7 +54,7 @@ namespace Services.Implementations
             var existingClient = await _repository.GetByIdAsync(client.Id);
             if (existingClient is null)
             {
-                return null;
+                throw new ClientNotFoundException("Client with given ID doesnt exist.");
             }
             existingClient.Name = clientDto.Name;
             existingClient.Address = clientDto.Address;
@@ -73,7 +67,12 @@ namespace Services.Implementations
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            return await _repository.DeleteAsync(id);
+            bool success = await _repository.DeleteAsync(id);
+            if (success)
+            {
+                return true;
+            }
+            throw new CategoryNotFoundException("Category with given ID doesnt exist");
         }
     }
 }

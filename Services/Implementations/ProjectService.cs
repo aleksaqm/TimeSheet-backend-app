@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Helpers;
 using Domain.QueryStrings;
 using Domain.Repositories;
@@ -35,7 +36,7 @@ namespace Services.Implementations
             var project = await _repository.GetByIdAsync(id);
             if (project is null)
             {
-                return null;
+                throw new ProjectNotFoundException("Project with given ID doesnt exist");
             }
             return _mapper.Map<ProjectResponse>(project);
         }
@@ -49,16 +50,9 @@ namespace Services.Implementations
         public async Task<ProjectResponse?> AddAsync(ProjectCreateDto projectDto)
         {
             var project = _mapper.Map<Project>(projectDto);
-            try
-            {
-                await _repository.AddAsync(project);
-                var fullProject = await _repository.GetByIdAsync(project.Id);
-                return _mapper.Map<ProjectResponse>(fullProject);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            await _repository.AddAsync(project);
+            var fullProject = await _repository.GetByIdAsync(project.Id);
+            return _mapper.Map<ProjectResponse>(fullProject);
         }
 
         public async Task<ProjectResponse?> UpdateAsync(ProjectUpdateDto projectDto)
@@ -67,7 +61,7 @@ namespace Services.Implementations
             var existingProject = await _repository.GetByIdAsync(project.Id);
             if (existingProject is null)
             {
-                return null;
+                throw new ProjectNotFoundException("Project with given ID doesnt exist");
             }
             existingProject.Name = project.Name;
             existingProject.Description = project.Description;
@@ -81,7 +75,12 @@ namespace Services.Implementations
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            return await _repository.DeleteAsync(id);
+            bool success = await _repository.DeleteAsync(id);
+            if (success)
+            {
+                return true;
+            }
+            throw new ProjectNotFoundException("Project with given ID doesnt exist");
         }
 
         

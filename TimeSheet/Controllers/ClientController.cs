@@ -40,10 +40,6 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ClientResponse>> GetById(Guid id)
         {
             var result = await _clientService.GetByIdAsync(id);
-            if (result is null)
-            {
-                return BadRequest("Client with given ID doesn't exist");
-            }
             return Ok(result);
         }
 
@@ -51,14 +47,14 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ClientResponse>> Add(ClientCreateDto clientDto)
         {
             var client = await _clientService.AddAsync(clientDto);
-            return client is null ? BadRequest() : Ok(client);
+            return Ok(client);
         }
 
         [HttpPut]
         public async Task<ActionResult<ClientResponse>> Update(ClientUpdateDto clientDto)
         {
             var client = await _clientService.UpdateAsync(clientDto);
-            return client is null ? BadRequest("Client with given ID doesn't exist") : Ok(client);
+            return Ok(client);
         }
 
         [HttpDelete]
@@ -66,11 +62,7 @@ namespace TimeSheet.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             bool success = await _clientService.DeleteAsync(id);
-            if (success)
-            {
-                return Ok();
-            }
-            return BadRequest("Client with given ID doesn't exist");
+            return Ok();
         }
 
     }

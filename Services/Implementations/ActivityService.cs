@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Repositories;
 using Services.Abstractions;
 using Shared;
@@ -28,7 +29,7 @@ namespace Services.Implementations
             var activity = await _repository.GetByIdAsync(id);
             if (activity is null)
             {
-                return null;
+                throw new ActivityNotFoundException("Activity with given ID doesn't exist");
             }
             return _mapper.Map<ActivityResponse>(activity);
         }
@@ -41,6 +42,7 @@ namespace Services.Implementations
 
         public async Task<IEnumerable<WorkDayDto>> GetActivitiesForPeriod(DateTime startDate, DateTime endDate, Guid userId)
         {
+            CheckDates(startDate, endDate);
             List<WorkDayDto> days = new List<WorkDayDto>();
             while (startDate.Date <= endDate.Date)
             {
@@ -54,6 +56,7 @@ namespace Services.Implementations
 
         public async Task<DaysHoursResponse> GetHoursForPeriod(DateTime startDate, DateTime endDate, Guid userId)
         {
+            CheckDates(startDate, endDate);
             double totalHours = 0;
             var days = new List<DayHours>();
             while (startDate.Date <= endDate.Date)
@@ -70,16 +73,9 @@ namespace Services.Implementations
         public async Task<ActivityResponse?> AddAsync(ActivityCreateDto activityDto)
         {
             var activity = _mapper.Map<Activity>(activityDto);
-            try
-            {
-                await _repository.AddAsync(activity);
-                var fullActivity = await _repository.GetByIdAsync(activity.Id);
-                return _mapper.Map<ActivityResponse>(fullActivity);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            await _repository.AddAsync(activity);
+            var fullActivity = await _repository.GetByIdAsync(activity.Id);
+            return _mapper.Map<ActivityResponse>(fullActivity);
         }
 
         public async Task<ActivityResponse?> UpdateAsync(ActivityUpdateDto activityDto)
@@ -88,7 +84,7 @@ namespace Services.Implementations
             var existingActivity = await _repository.GetByIdAsync(activity.Id);
             if (existingActivity is null)
             {
-                return null;
+                throw new ActivityNotFoundException("Activity with given ID doesnt exist");
             }
             existingActivity.Date = activity.Date;
             existingActivity.CategoryId = activity.CategoryId;
@@ -104,11 +100,17 @@ namespace Services.Implementations
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-             return await _repository.DeleteAsync(id);
+            bool success = await _repository.DeleteAsync(id);
+            if (success)
+            {
+                return true;
+            }
+            throw new ActivityNotFoundException("Activity with given ID doesnt exist");
         }
 
         public async Task<ReportResponse> GetReportAsync(GetReportDto reportDto)
         {
+            CheckDates(reportDto.StartDate, reportDto.EndDate);
             var activities = await _repository.GetForReport(reportDto);
             var reportDtos = _mapper.Map<List<ReportDto>>(activities);
             double reportTotalHours = reportDtos.Sum(report => report.Time);
@@ -117,6 +119,14 @@ namespace Services.Implementations
                 Reports = reportDtos,
                 ReportTotal = reportTotalHours
             };
+        }
+
+        private void CheckDates(DateTime startDate, DateTime endDate)
+        {
+            if (startDate.Date > endDate.Date)
+            {
+                throw new InvalidDatesException("Start date is after end date");
+            }
         }
         
     }

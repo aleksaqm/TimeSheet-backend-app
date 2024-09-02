@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Helpers;
 using Domain.QueryStrings;
 using Domain.Repositories;
@@ -35,7 +36,7 @@ namespace Services.Implementations
             var category = await _repository.GetByIdAsync(id);
             if (category is null)
             {
-                return null;
+                throw new CategoryNotFoundException("Category with given ID doesnt exist");
             }
             return _mapper.Map<CategoryResponse>(category);
         }
@@ -43,15 +44,8 @@ namespace Services.Implementations
         public async Task<CategoryResponse?> AddAsync(CategoryCreateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
-            try
-            {
-                await _repository.AddAsync(category);
-                return _mapper.Map<CategoryResponse>(category);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            await _repository.AddAsync(category);
+            return _mapper.Map<CategoryResponse>(category);
         }
 
         public async Task<CategoryResponse?> UpdateAsync(CategoryUpdateDto categoryDto)
@@ -60,7 +54,7 @@ namespace Services.Implementations
             var existingCategory = await _repository.GetByIdAsync(category.Id);
             if (existingCategory is null)
             {
-                return null;
+                throw new CategoryNotFoundException("Category with given ID doesnt exist");
             }
             existingCategory.Name = category.Name;
             await _repository.UpdateAsync();
@@ -69,7 +63,12 @@ namespace Services.Implementations
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            return await _repository.DeleteAsync(id);
+            bool success = await _repository.DeleteAsync(id);
+            if (success)
+            {
+                return true;
+            }
+            throw new CategoryNotFoundException("Category with given ID doesnt exist");
         }
     }
 }

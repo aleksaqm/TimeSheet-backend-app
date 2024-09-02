@@ -41,10 +41,6 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ProjectResponse>> GetById(Guid id)
         {
             var result = await _projectService.GetByIdAsync(id);
-            if (result is null)
-            {
-                return BadRequest("Project with given ID doesn't exist");
-            }
             return Ok(result);
         }
 
@@ -53,14 +49,14 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ProjectResponse>> Add(ProjectCreateDto projectDto)
         {
             var project = await _projectService.AddAsync(projectDto);
-            return project is null ? BadRequest() : Ok(project);
+            return Ok(project);
         }
 
         [HttpPut]
         public async Task<ActionResult<ProjectResponse>> Update(ProjectUpdateDto projectDto)
         {
             var project = await _projectService.UpdateAsync(projectDto);
-            return project is null ? BadRequest("Project with given ID doesn't exist") : Ok(project);
+            return Ok(project);
         }
 
         [HttpDelete]
@@ -68,11 +64,7 @@ namespace TimeSheet.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             bool success = await _projectService.DeleteAsync(id);
-            if (success)
-            {
-                return Ok();
-            }
-            return BadRequest("Project with given ID doesn't exist");
+            return Ok();
         }
 
 

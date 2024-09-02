@@ -28,10 +28,6 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ActivityResponse>> GetById(Guid id)
         {
             var result = await _activityService.GetByIdAsync(id);
-            if (result is null)
-            {
-                return BadRequest("Activity with given ID doesn't exist");
-            }
             return Ok(result);
         }
 
@@ -55,14 +51,14 @@ namespace TimeSheet.Controllers
         public async Task<ActionResult<ActivityResponse>> Add(ActivityCreateDto activityDto)
         {
             var activity = await _activityService.AddAsync(activityDto);
-            return activity is null ? BadRequest() : Ok(activity);
+            return Ok(activity);
         }
 
         [HttpPut]
         public async Task<ActionResult<ActivityResponse>> Update(ActivityUpdateDto activityDto)
         {
             var activity = await _activityService.UpdateAsync(activityDto);
-            return activity is null ? BadRequest("Activity with given ID doesn't exist") : Ok(activity);
+            return Ok(activity);
         }
 
         [HttpDelete]
@@ -70,11 +66,7 @@ namespace TimeSheet.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             bool success = await _activityService.DeleteAsync(id);
-            if (success)
-            {
-                return Ok();
-            }
-            return BadRequest("Activity with given ID doesn't exist");
+            return Ok();
         }
 
         

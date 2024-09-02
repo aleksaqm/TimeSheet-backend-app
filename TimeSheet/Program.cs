@@ -1,13 +1,15 @@
 using Domain.Repositories;
 using Infrastructure;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Service.Abstractions;
 using Services.Abstractions;
 using Services.Implementations;
 using Services.MappingProfiles;
+using TimeSheet.Middleware;
 
-internal class Program
+public class Program
 {
     private static void Main(string[] args)
     {
@@ -38,6 +40,8 @@ internal class Program
         builder.Services.AddDbContext<RepositoryDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+        //builder.Services.AddTransient<ExceptionHandlingMid>();
+
 
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -51,9 +55,12 @@ internal class Program
             app.UseSwaggerUI();
         }
 
+
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.MapControllers();
 
