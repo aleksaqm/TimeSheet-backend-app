@@ -19,12 +19,11 @@ namespace Infrastructure.Repositories
         {
             parameters.SearchText ??= string.Empty;
             parameters.FirstLetter ??= string.Empty;
-            var allClients = await _dbContext.Clients
-                .Where(a => a.Name.StartsWith(parameters.FirstLetter) && a.Name.Contains(parameters.SearchText))
-                .ToListAsync();
-            var allClientsQuerriable = allClients.AsQueryable();
+            var allClients = from c in _dbContext.Clients
+                                where c.Name.StartsWith(parameters.FirstLetter) && c.Name.Contains(parameters.SearchText)
+                                select c;
             var clients =
-                PaginatedList<Client>.ToPagedList(allClientsQuerriable, parameters.PageNumber, parameters.PageSize);
+                PaginatedList<Client>.ToPagedList(allClients, parameters.PageNumber, parameters.PageSize);
             return clients;
         }
 

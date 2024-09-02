@@ -20,11 +20,10 @@ namespace Infrastructure.Repositories
         {
             parameters.SearchText ??= string.Empty;
             parameters.FirstLetter ??= string.Empty;
-            var allCategories = await _dbContext.Categories
-                .Where(a => a.Name.StartsWith(parameters.FirstLetter) && a.Name.Contains(parameters.SearchText))
-                .ToListAsync();
-            var allCategoriesQuarriable = allCategories.AsQueryable();
-            var categories = PaginatedList<Category>.ToPagedList(allCategoriesQuarriable, parameters.PageNumber, parameters.PageSize);
+            var allCategories = from c in _dbContext.Categories
+                           where c.Name.StartsWith(parameters.FirstLetter) && c.Name.Contains(parameters.SearchText)
+                           select c;
+            var categories = PaginatedList<Category>.ToPagedList(allCategories, parameters.PageNumber, parameters.PageSize);
             return categories;
         }
 

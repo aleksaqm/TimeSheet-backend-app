@@ -19,16 +19,14 @@ namespace Infrastructure.Repositories
         {
             parameters.SearchText ??= string.Empty;
             parameters.FirstLetter ??= string.Empty;
-            var allMembers = await _dbContext.TeamMembers
+            var allMembers = _dbContext.TeamMembers
                 .Where(a => (a.Name.StartsWith(parameters.FirstLetter) ||
                              a.Name.Contains(" " + parameters.FirstLetter))
                             && a.Name.Contains(parameters.SearchText)
                             && a.Status.StatusName == "Active")
-                .Include(t => t.Status)
-                .ToListAsync();
-            var allMembersQuearriable = allMembers.AsQueryable();
+                .Include(t => t.Status);
             var members =
-                PaginatedList<TeamMember>.ToPagedList(allMembersQuearriable, parameters.PageNumber,
+                PaginatedList<TeamMember>.ToPagedList(allMembers, parameters.PageNumber,
                     parameters.PageSize);
             return members;
         }

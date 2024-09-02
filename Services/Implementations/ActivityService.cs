@@ -118,23 +118,6 @@ namespace Services.Implementations
                 ReportTotal = reportTotalHours
             };
         }
-
-
-
-        private double CalculateHours(IEnumerable<Activity> activities)
-        {
-            double hours = 0;
-            foreach (var activity in activities)
-            {
-                hours += activity.Hours;
-                if (activity.Overtime != null)
-                {
-                    hours += (double) activity.Overtime;
-                }
-            }
-            return hours;
-        }
-
         
     }
 }

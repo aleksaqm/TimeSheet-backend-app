@@ -19,14 +19,12 @@ namespace Infrastructure.Repositories
         {
             parameters.SearchText ??= string.Empty;
             parameters.FirstLetter ??= string.Empty;
-            var allProjects = await _dbContext.Projects
-                .Where(a => a.Name.StartsWith(parameters.FirstLetter) && a.Name.Contains(parameters.SearchText))
-                .Include(t => t.Status)
-                .Include(t => t.Customer)
-                .Include(t => t.Lead)
-                .ToListAsync();
-            var allProjectsQuarriable = allProjects.AsQueryable();
-            var projects = PaginatedList<Project>.ToPagedList(allProjectsQuarriable, parameters.PageNumber, parameters.PageSize);
+            var allProjects = _dbContext.Projects
+                .Where(p => p.Name.StartsWith(parameters.FirstLetter) && p.Name.Contains(parameters.SearchText))
+                .Include(p => p.Status)
+                .Include(p => p.Customer)
+                .Include(p => p.Lead);
+            var projects = PaginatedList<Project>.ToPagedList(allProjects, parameters.PageNumber, parameters.PageSize);
             return projects;
         }
 

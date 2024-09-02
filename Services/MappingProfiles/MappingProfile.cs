@@ -47,10 +47,7 @@ namespace Services.MappingProfiles
 
             CreateMap<ActivityCreateDto, Activity>();
             CreateMap<ActivityUpdateDto, Activity>();
-            CreateMap<Activity, ActivityResponse>()
-                .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client.Name))
-                .ForMember(dest => dest.Project, opt => opt.MapFrom(src => src.Project.Name))
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
+            CreateMap<Activity, ActivityResponse>();
             CreateMap<Activity, ActivityDto>()
                 .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client.Name))
                 .ForMember(dest => dest.Project, opt => opt.MapFrom(src => src.Project.Name))
