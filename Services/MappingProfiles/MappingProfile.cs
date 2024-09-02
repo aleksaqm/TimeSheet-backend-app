@@ -58,6 +58,13 @@ namespace Services.MappingProfiles
                 .ForMember(dest => dest.TeamMember, opt => opt.MapFrom(src => src.User.Name))
                 .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.Hours + src.Overtime));
 
+            CreateMap<Activity, ReportDto>()
+                .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client.Name))
+                .ForMember(dest => dest.Project, opt => opt.MapFrom(src => src.Project.Name))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.TeamMember, opt => opt.MapFrom(src => src.User.Name))
+                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.Hours + src.Overtime));
+
 
         }
     }

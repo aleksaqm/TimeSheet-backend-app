@@ -18,6 +18,8 @@ namespace Infrastructure.Repositories
 
         public async Task<PaginatedList<Category>> GetAllAsync(QueryStringParameters parameters)
         {
+            parameters.SearchText ??= string.Empty;
+            parameters.FirstLetter ??= string.Empty;
             var allCategories = await _dbContext.Categories
                 .Where(a => a.Name.StartsWith(parameters.FirstLetter) && a.Name.Contains(parameters.SearchText))
                 .ToListAsync();

@@ -45,7 +45,8 @@ namespace Services.Implementations
             while (startDate.Date <= endDate.Date)
             {
                 var activities = await _repository.GetForOneDay(startDate, userId);
-                days.Add(new WorkDayDto { Activities = _mapper.Map<List<ActivityResponse>>(activities), Date = startDate, TotalHours = CalculateHours(activities) });
+                var totalHours = activities.Sum(x => x.Hours + (double)x.Overtime);
+                days.Add(new WorkDayDto { Activities = _mapper.Map<List<ActivityResponse>>(activities), Date = startDate, TotalHours = totalHours }); //
                 startDate = startDate.AddDays(1);
             }
             return days;
@@ -58,7 +59,7 @@ namespace Services.Implementations
             while (startDate.Date <= endDate.Date)
             {
                 var activities = await _repository.GetForOneDay(startDate, userId);
-                var hours = CalculateHours(activities);
+                double hours = activities.Sum(x => x.Hours + (double)x.Overtime);
                 days.Add(new DayHours { Date=startDate, Hours = hours });
                 totalHours += hours;
                 startDate = startDate.AddDays(1);
@@ -109,12 +110,12 @@ namespace Services.Implementations
         public async Task<ReportResponse> GetReportAsync(GetReportDto reportDto)
         {
             var activities = await _repository.GetForReport(reportDto);
-            var activityDtos = _mapper.Map<List<ActivityDto>>(activities);
-            double reportTotal = activityDtos.Sum(activity => activity.Time);
+            var reportDtos = _mapper.Map<List<ReportDto>>(activities);
+            double reportTotalHours = reportDtos.Sum(report => report.Time);
             return new ReportResponse
             {
-                Activities = activityDtos,
-                ReportTotal = reportTotal
+                Reports = reportDtos,
+                ReportTotal = reportTotalHours
             };
         }
 

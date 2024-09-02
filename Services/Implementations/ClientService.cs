@@ -21,8 +21,6 @@ namespace Services.Implementations
 
         public async Task<PaginatedList<ClientResponse>> GetAllAsync(QueryStringParameters parameters)
         {
-            parameters.SearchText ??= string.Empty;
-            parameters.FirstLetter ??= string.Empty;
             var clients = await _repository.GetAllAsync(parameters);
             var mapped = _mapper.Map<PaginatedList<ClientResponse>>(clients);
             mapped.CurrentPage = clients.CurrentPage;

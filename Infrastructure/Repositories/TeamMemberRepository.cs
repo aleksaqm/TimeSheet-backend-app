@@ -17,14 +17,13 @@ namespace Infrastructure.Repositories
 
         public async Task<PaginatedList<TeamMember>> GetAllAsync(QueryStringParameters parameters)
         {
-            //var allMembers = await _dbContext.TeamMembers
-            //    .Where(a => a.Name.Split(" ").Any(n => n.StartsWith(parameters.FirstLetter)) && a.Name.Contains(parameters.SearchText))
-            //    .Include(t => t.Status)
-            //    .ToListAsync();
+            parameters.SearchText ??= string.Empty;
+            parameters.FirstLetter ??= string.Empty;
             var allMembers = await _dbContext.TeamMembers
                 .Where(a => (a.Name.StartsWith(parameters.FirstLetter) ||
                              a.Name.Contains(" " + parameters.FirstLetter))
-                            && a.Name.Contains(parameters.SearchText))
+                            && a.Name.Contains(parameters.SearchText)
+                            && a.Status.StatusName == "Active")
                 .Include(t => t.Status)
                 .ToListAsync();
             var allMembersQuearriable = allMembers.AsQueryable();
@@ -71,7 +70,5 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return true;
         }
-
-        
     }
 }

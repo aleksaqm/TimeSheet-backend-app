@@ -8,7 +8,7 @@ namespace Shared
 {
     public class ReportResponse
     {
-        public required IEnumerable<ActivityDto> Activities { get; set; }
+        public required IEnumerable<ReportDto> Reports { get; set; }
         public double ReportTotal { get; set; }
     }
 }
