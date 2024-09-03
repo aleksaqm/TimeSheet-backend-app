@@ -10,6 +10,6 @@ namespace Services.Abstractions
 {
     public interface ITokenService
     {
-        TokenDto CreateToken(TeamMember member);
+        string CreateToken(TeamMember member);
     }
 }

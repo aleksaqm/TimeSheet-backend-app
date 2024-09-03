@@ -11,6 +11,6 @@ namespace Services.Abstractions
     public interface IAccountService
     {
         Task<RegisterDto> Register(RegisterDto registerDto);
-        Task<TokenDto> Login(LoginDto loginDto);
+        Task<string> Login(LoginDto loginDto);
     }
 }

@@ -25,7 +25,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<TeamMember>> Login(LoginDto loginDto)
+        public async Task<ActionResult<string>> Login(LoginDto loginDto)
         {
             var result = await _accountService.Login(loginDto);
             return Ok(result);

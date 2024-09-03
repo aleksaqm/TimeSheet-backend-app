@@ -108,19 +108,6 @@ namespace Services.Implementations
             throw new ActivityNotFoundException("Activity with given ID doesnt exist");
         }
 
-        public async Task<ReportResponse> GetReportAsync(GetReportDto reportDto)
-        {
-            CheckDates(reportDto.StartDate, reportDto.EndDate);
-            var activities = await _repository.GetForReport(reportDto);
-            var reportDtos = _mapper.Map<List<ReportDto>>(activities);
-            double reportTotalHours = reportDtos.Sum(report => report.Time);
-            return new ReportResponse
-            {
-                Reports = reportDtos,
-                ReportTotal = reportTotalHours
-            };
-        }
-
         private void CheckDates(DateTime startDate, DateTime endDate)
         {
             if (startDate.Date > endDate.Date)

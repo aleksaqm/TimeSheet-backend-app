@@ -9,6 +9,6 @@ namespace Shared
     public class ReportResponse
     {
         public required IEnumerable<ReportDto> Reports { get; set; }
-        public double ReportTotal { get; set; }
+        public double ReportTotalHours { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<TokenDto> Login(LoginDto loginDto)
+        public async Task<string> Login(LoginDto loginDto)
         {
             var user = await _repository.GetByEmailAsync(loginDto.Email);
             if (user is null)

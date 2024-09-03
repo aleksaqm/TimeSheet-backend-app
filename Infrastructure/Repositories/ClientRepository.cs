@@ -17,13 +17,22 @@ namespace Infrastructure.Repositories
 
         public async Task<PaginatedList<Client>> GetAllAsync(QueryStringParameters parameters)
         {
-            parameters.SearchText ??= string.Empty;
-            parameters.FirstLetter ??= string.Empty;
-            var allClients = from c in _dbContext.Clients
-                                where c.Name.StartsWith(parameters.FirstLetter) && c.Name.Contains(parameters.SearchText)
-                                select c;
+            //parameters.SearchText ??= string.Empty;
+            //parameters.FirstLetter ??= string.Empty;
+            //var allClients = from c in _dbContext.Clients select c;
+            //where c.Name.StartsWith(parameters.FirstLetter) && c.Name.Contains(parameters.SearchText)
+            var query = _dbContext.Clients.AsQueryable();
+            if (parameters.SearchText is not null)
+            {
+                query = query.Where(c => c.Name.Contains(parameters.SearchText));
+            }
+            if (parameters.FirstLetter is not null) 
+            {
+                query = query.Where(c => c.Name.StartsWith(parameters.FirstLetter));
+            }
+
             var clients =
-                PaginatedList<Client>.ToPagedList(allClients, parameters.PageNumber, parameters.PageSize);
+                PaginatedList<Client>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
             return clients;
         }
 

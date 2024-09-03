@@ -24,12 +24,13 @@ namespace Services.Implementations
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public TokenDto CreateToken(TeamMember member)
+        public string CreateToken(TeamMember member)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, member.Email),
-                new Claim(ClaimTypes.Role, member.Role.ToString())
+                new (ClaimTypes.Sid, member.Id.ToString()),
+                new (ClaimTypes.Email, member.Email),
+                new (ClaimTypes.Role, member.Role.ToString())
             };
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
@@ -37,7 +38,7 @@ namespace Services.Implementations
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddHours(2),
+                Expires = DateTime.Now.AddHours(24),
                 SigningCredentials = credentials,
             };
 
@@ -45,10 +46,7 @@ namespace Services.Implementations
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return new TokenDto
-            {
-                Token = tokenHandler.WriteToken(token)
-            };
+            return tokenHandler.WriteToken(token);
 
         }
     }

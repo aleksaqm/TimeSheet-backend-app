@@ -15,7 +15,6 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-
         public async Task<PaginatedList<Category>> GetAllAsync(QueryStringParameters parameters)
         {
             parameters.SearchText ??= string.Empty;

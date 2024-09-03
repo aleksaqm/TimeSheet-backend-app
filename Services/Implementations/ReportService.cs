@@ -31,7 +31,7 @@ namespace Services.Implementations
             return new ReportResponse
             {
                 Reports = reportDtos,
-                ReportTotal = reportTotalHours
+                ReportTotalHours = reportTotalHours
             };
         }
 
