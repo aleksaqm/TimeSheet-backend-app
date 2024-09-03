@@ -37,10 +37,12 @@ public class Program
         builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
         builder.Services.AddTransient<IActivityService, ActivityService>();
 
+        builder.Services.AddTransient<IReportService, ReportService>();
+
+        builder.Services.AddTransient<IAccountService, AccountService>();
+
         builder.Services.AddDbContext<RepositoryDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-        //builder.Services.AddTransient<ExceptionHandlingMid>();
 
 
         builder.Services.AddAutoMapper(typeof(MappingProfile));

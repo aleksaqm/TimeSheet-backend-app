@@ -44,15 +44,14 @@ namespace TimeSheet.Middleware
                 TeamMemberNotFoundException _ => new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Team member not found", Detail = ex.Message },
                 InvalidDatesException _ => new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Invalid dates", Detail = ex.Message },
                 ActivityNotFoundException _ => new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Activity not found", Detail = ex.Message },
+                UsernameAlreadyTakenException _ => new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Username already taken", Detail = ex.Message },
+                EmailAlreadyExistsException _ => new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Email already exists", Detail = ex.Message },
 
-
-                //KeyNotFoundException _ => new ExceptionResponse((int)HttpStatusCode.BadRequest, "The request key not found."),
-                //UnauthorizedAccessException _ => new ExceptionResponse((int)HttpStatusCode.Unauthorized, "Unauthorized."),
                 //_ => new ProblemDetails((int)HttpStatusCode.InternalServerError, "Internal server error. Please retry later.")
             };
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int) response.Status;
+            context.Response.StatusCode = (int)response.Status;
             await context.Response.WriteAsJsonAsync(response);
         }
 

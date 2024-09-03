@@ -39,6 +39,11 @@ namespace Infrastructure.ModelBuilders
                 .HasForeignKey("StatusId")
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
+
+            _modelBuilder.Entity<TeamMember>()
+                .HasIndex(a => a.Username);
+            _modelBuilder.Entity<TeamMember>()
+                .HasIndex(a => a.Email);
         }
     }
 }

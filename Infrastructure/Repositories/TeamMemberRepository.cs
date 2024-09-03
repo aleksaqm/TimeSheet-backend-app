@@ -68,5 +68,19 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<TeamMember?> GetByUsernameAsync(string username)
+        {
+            return await _dbContext.TeamMembers
+                .Include(t => t.Status)
+                .SingleOrDefaultAsync(t => t.Username == username);
+        }
+
+        public async Task<TeamMember?> GetByEmailAsync(string email)
+        {
+            return await _dbContext.TeamMembers
+                .Include(t => t.Status)
+                .SingleOrDefaultAsync(t => t.Email == email);
+        }
     }
 }

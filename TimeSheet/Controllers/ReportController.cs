@@ -9,17 +9,17 @@ namespace TimeSheet.Controllers
     [ApiController]
     public class ReportController : ControllerBase
     {
-        private readonly IActivityService _activityService;
+        private readonly IReportService _reportService;
 
-        public ReportController(IActivityService service)
+        public ReportController(IReportService service)
         {
-            _activityService = service;
+            _reportService = service;
         }
 
         [HttpGet]
         public async Task<ActionResult<ReportResponse>> GetReport([FromQuery] GetReportDto reportDto)
         {
-            var result = await _activityService.GetReportAsync(reportDto);
+            var result = await _reportService.GetReportAsync(reportDto);
             return Ok(result);
         }
     }
