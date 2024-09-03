@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
+using Shared;
 
 namespace TimeSheet.Controllers
 {
@@ -14,6 +16,21 @@ namespace TimeSheet.Controllers
         {
             _accountService = service;
         }
+
+        [HttpPost("Register")]
+        public async Task<ActionResult<RegisterDto>> Register(RegisterDto registerDto)
+        {
+            var result = await _accountService.Register(registerDto);
+            return Ok(result);
+        }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<TeamMember>> Login(LoginDto loginDto)
+        {
+            var result = await _accountService.Login(loginDto);
+            return Ok(result);
+        }
+
 
 
     }

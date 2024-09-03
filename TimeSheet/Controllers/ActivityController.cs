@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using Shared;
 using System.ComponentModel.DataAnnotations;
@@ -16,6 +17,7 @@ namespace TimeSheet.Controllers
             _activityService = service;
         }
 
+        [Authorize(Roles = "Admin, Worker")]
         [HttpGet]
         public async Task<ActionResult<List<ActivityResponse>>> GetAll()
         {

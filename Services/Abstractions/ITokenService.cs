@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Services.Abstractions
 {
-    public interface IAccountService
+    public interface ITokenService
     {
-        Task<RegisterDto> Register(RegisterDto registerDto);
-        Task<TokenDto> Login(LoginDto loginDto);
+        TokenDto CreateToken(TeamMember member);
     }
 }

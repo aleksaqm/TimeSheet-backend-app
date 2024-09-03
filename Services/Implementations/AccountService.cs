@@ -17,12 +17,35 @@ namespace Services.Implementations
     public class AccountService : IAccountService
     {
         private readonly ITeamMemberRepository _repository;
+        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public AccountService(ITeamMemberRepository repository, IMapper mapper)
+        public AccountService(ITeamMemberRepository repository, ITokenService tokenService, IMapper mapper)
         {
             _repository = repository;
+            _tokenService = tokenService;
             _mapper = mapper;
+        }
+
+        public async Task<TokenDto> Login(LoginDto loginDto)
+        {
+            var user = await _repository.GetByEmailAsync(loginDto.Email);
+            if (user is null)
+            {
+                throw new InvalidLoginCredentialsException("User with given email doesnt exist");
+            }
+            var hmac = new HMACSHA512(user.PasswordSalt);
+            var passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+
+            for (int i = 0; i < passwordHash.Length; i++)
+            {
+                if (passwordHash[i] != user.Password[i])
+                {
+                    throw new InvalidLoginCredentialsException("Incorrect password");
+                }
+            }
+
+            return _tokenService.CreateToken(user);
         }
 
         public async Task<RegisterDto> Register(RegisterDto registerDto)
@@ -40,7 +63,7 @@ namespace Services.Implementations
             var passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
 
             Role role;
-            Enum.TryParse<Role>(registerDto.Role, out role);
+            Enum.TryParse(registerDto.Role, out role);
 
             var teamMember = new TeamMember
             {
@@ -48,6 +71,7 @@ namespace Services.Implementations
                 Username = registerDto.Username,
                 Email = registerDto.Email,
                 Password = passwordHash,
+                PasswordSalt = hmac.Key,
                 Role = role,
                 Status = new Status { StatusName = "Active" }
             };

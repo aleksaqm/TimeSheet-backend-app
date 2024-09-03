@@ -6,7 +6,8 @@
         public string Name { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
-        public byte[]? Password { get; set; }
+        public byte[] Password { get; set; }
+        public byte[] PasswordSalt { get; set; }
         public double HoursPerWeek { get; set; }
         public Role Role { get; set; }
         public Guid StatusId { get; set; }

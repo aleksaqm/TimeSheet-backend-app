@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initalmigration : Migration
+    public partial class initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,9 +57,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     HoursPerWeek = table.Column<double>(type: "float", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -199,9 +199,19 @@ namespace Infrastructure.Migrations
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TeamMembers_Email",
+                table: "TeamMembers",
+                column: "Email");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TeamMembers_StatusId",
                 table: "TeamMembers",
                 column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TeamMembers_Username",
+                table: "TeamMembers",
+                column: "Username");
         }
 
         /// <inheritdoc />
