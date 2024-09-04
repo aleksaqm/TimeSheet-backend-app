@@ -65,6 +65,7 @@ public class Program
         builder.Services.AddTransient<ITokenService, TokenService>();
 
         builder.Services.AddTransient<IPdfService, PdfService>();
+        builder.Services.AddTransient<IExcelService, ExcelService>();
 
         builder.Services.AddDbContext<RepositoryDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

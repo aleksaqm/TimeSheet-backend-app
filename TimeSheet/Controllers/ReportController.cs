@@ -13,11 +13,13 @@ namespace TimeSheet.Controllers
     {
         private readonly IReportService _reportService;
         private readonly IPdfService _pdfService;
+        private readonly IExcelService _excelService;
 
-        public ReportController(IReportService service, IPdfService pdfService)
+        public ReportController(IReportService service, IPdfService pdfService, IExcelService excelService)
         {
             _reportService = service;
             _pdfService = pdfService;
+            _excelService = excelService;
         }
 
         [HttpGet]
@@ -33,6 +35,14 @@ namespace TimeSheet.Controllers
         {
             var pdf = _pdfService.GenerateReportPdf(report);
             return File(pdf, "application/pdf", "report.pdf");
+        }
+
+        [HttpPost]
+        [Route("Excel")]
+        public FileResult ExportToExcel(IEnumerable<ReportDto> reports)
+        {
+            var excelFile = _excelService.ExportToExcel(reports);
+            return File(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
         }
 
     }
