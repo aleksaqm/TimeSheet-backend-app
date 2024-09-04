@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
-using Services.Implementations;
 using Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
@@ -17,8 +17,9 @@ namespace TimeSheet.Controllers
             _activityService = service;
         }
 
+        [Authorize(Roles = "Worker")]
         [HttpGet]
-        public async Task<ActionResult<List<ActivityDto>>> GetAll()
+        public async Task<ActionResult<List<ActivityResponse>>> GetAll()
         {
             var results = await _activityService.GetAllAsync();
             return Ok(results);
@@ -26,26 +27,40 @@ namespace TimeSheet.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
-        public async Task<ActionResult<ActivityDto>> GetById(Guid id)
+        public async Task<ActionResult<ActivityResponse>> GetById(Guid id)
         {
             var result = await _activityService.GetByIdAsync(id);
-            if (result == null)
-                return BadRequest("Activity with given ID doesn't exist");
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("Days")]
+        public async Task<ActionResult<List<WorkDayDto>>> GetActivitiesForPeriod([Required] DateTime startDate, [Required] DateTime endDate, [Required] Guid userId)
+        {
+            var results = await _activityService.GetActivitiesForPeriod(startDate, endDate, userId);
+            return Ok(results);
+        }
+
+        [HttpGet]
+        [Route("Hours")]
+        public async Task<ActionResult<DaysHoursResponse>> GetHoursForPeriod([Required] DateTime startDate, [Required] DateTime endDate, [Required] Guid userId)
+        {
+            var result = await _activityService.GetHoursForPeriod(startDate, endDate, userId);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ActivityDto>> Add(ActivityCreateDto activityDto)
+        public async Task<ActionResult<ActivityResponse>> Add(ActivityCreateDto activityDto)
         {
             var activity = await _activityService.AddAsync(activityDto);
-            return activity == null ? BadRequest() : Ok(activity);
+            return Ok(activity);
         }
 
         [HttpPut]
-        public async Task<ActionResult<ActivityDto>> Update(ActivityUpdateDto activityDto)
+        public async Task<ActionResult<ActivityResponse>> Update(ActivityUpdateDto activityDto)
         {
             var activity = await _activityService.UpdateAsync(activityDto);
-            return activity == null ? BadRequest("Activity with given ID doesn't exist") : Ok(activity);
+            return Ok(activity);
         }
 
         [HttpDelete]
@@ -53,12 +68,10 @@ namespace TimeSheet.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             bool success = await _activityService.DeleteAsync(id);
-            if (success)
-                return Ok();
-            return BadRequest("Activity with given ID doesn't exist");
+            return Ok();
         }
 
-
+        
 
     }
 }

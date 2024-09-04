@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.QueryStrings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Services.Abstractions;
 using Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
@@ -17,34 +20,50 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TeamMemberDto>>> GetAll()
+        public async Task<ActionResult<List<TeamMemberResponse>>> GetAll([FromQuery] QueryStringParameters parameters)
         {
-            var results = await _teamMemberService.GetAllAsync();
+            var results = await _teamMemberService.GetAllAsync(parameters);
+            var metadata = new
+            {
+                results.TotalCount,
+                results.PageSize,
+                results.CurrentPage,
+                results.HasNext,
+                results.HasPrevious
+            };
+
+            Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(results);
         }
 
         [HttpGet]
         [Route("{id:guid}")]
-        public async Task<ActionResult<TeamMemberDto>> GetById(Guid id)
+        public async Task<ActionResult<TeamMemberResponse>> GetById(Guid id)
         {
             var result = await _teamMemberService.GetByIdAsync(id);
-            if (result == null)
-                return BadRequest("Team member with given ID doesn't exist");
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("Active")]
+        public async Task<ActionResult<List<TeamMemberResponse>>> GetActive()
+        {
+            var results = await _teamMemberService.GetActive();
+            return Ok(results);
+        }
+
         [HttpPost]
-        public async Task<ActionResult<TeamMemberDto>> Add(TeamMemberCreateDto teamMemberDto)
+        public async Task<ActionResult<TeamMemberResponse>> Add(TeamMemberCreateDto teamMemberDto)
         {
             var member = await _teamMemberService.AddAsync(teamMemberDto);
-            return member == null ? BadRequest() : Ok(member);
+            return Ok(member);
         }
 
         [HttpPut]
-        public async Task<ActionResult<TeamMemberDto>> Update(TeamMemberDto teamMemberDto)
+        public async Task<ActionResult<TeamMemberResponse>> Update(TeamMemberUpdateDto teamMemberDto)
         {
             var member = await _teamMemberService.UpdateAsync(teamMemberDto);
-            return member == null ? BadRequest("Team member with given ID doesn't exist") : Ok(member);
+            return Ok(member);
         }
 
         [HttpDelete]
@@ -52,9 +71,7 @@ namespace TimeSheet.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             bool success = await _teamMemberService.DeleteAsync(id);
-            if (success)
-                return Ok();
-            return BadRequest("Team member with given ID doesn't exist");
+            return Ok();
         }
     }
 }

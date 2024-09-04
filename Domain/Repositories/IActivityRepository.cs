@@ -1,9 +1,5 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared;
 
 namespace Domain.Repositories
 {
@@ -11,8 +7,11 @@ namespace Domain.Repositories
     {
         Task<Activity?> GetByIdAsync(Guid id);
         Task<IEnumerable<Activity>> GetAllAsync();
+        Task<IEnumerable<Activity>> GetForOneDay(DateTime day, Guid userId);
+        Task<IEnumerable<Activity>> GetForPeriod(DateTime startDate, DateTime endDate, Guid userId);
         Task AddAsync(Activity activity);
         Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);
+        Task<IEnumerable<Activity>> GetForReport(GetReportDto reportFilter);
     }
 }

@@ -1,11 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
+using Domain.QueryStrings;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -18,9 +15,24 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-        public async Task<IEnumerable<Client>> GetAllAsync()
+        public async Task<PaginatedList<Client>> GetAllAsync(QueryStringParameters parameters)
         {
-            var clients = await _dbContext.Clients.ToArrayAsync();
+            //parameters.SearchText ??= string.Empty;
+            //parameters.FirstLetter ??= string.Empty;
+            //var allClients = from c in _dbContext.Clients select c;
+            //where c.Name.StartsWith(parameters.FirstLetter) && c.Name.Contains(parameters.SearchText)
+            var query = _dbContext.Clients.AsQueryable();
+            if (parameters.SearchText is not null)
+            {
+                query = query.Where(c => c.Name.Contains(parameters.SearchText));
+            }
+            if (parameters.FirstLetter is not null) 
+            {
+                query = query.Where(c => c.Name.StartsWith(parameters.FirstLetter));
+            }
+
+            var clients =
+                PaginatedList<Client>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
             return clients;
         }
 
@@ -43,8 +55,10 @@ namespace Infrastructure.Repositories
         public async Task<bool> DeleteAsync(Guid id)
         {
             var existingClient = await _dbContext.Clients.FindAsync(id);
-            if (existingClient == null)
+            if (existingClient is null)
+            {
                 return false;
+            }
             _dbContext.Clients.Remove(existingClient);
             await _dbContext.SaveChangesAsync();
             return true;

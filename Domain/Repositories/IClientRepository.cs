@@ -1,16 +1,13 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Helpers;
+using Domain.QueryStrings;
 
 namespace Domain.Repositories
 {
     public interface IClientRepository
     {
         Task<Client?> GetByIdAsync(Guid id);
-        Task<IEnumerable<Client>> GetAllAsync();
+        Task<PaginatedList<Client>> GetAllAsync(QueryStringParameters parameters);
         Task AddAsync(Client client);
         Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);

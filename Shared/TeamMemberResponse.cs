@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Shared
 {
-    public class TeamMemberDto
+    public class TeamMemberResponse
     {
         public required Guid Id { get; set; }
         public required string Name { get; set; }
@@ -17,9 +16,4 @@ namespace Shared
         public required string Role { get; set; }
         public required string Status { get; set; }
     }
-
-    //public enum Role
-    //{
-    //    Admin, Worker
-    //}
 }

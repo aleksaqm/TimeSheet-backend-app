@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.QueryStrings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Services.Abstractions;
-using Services.Implementations;
 using Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
@@ -18,34 +20,43 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProjectDto>>> GetAll()
+        public async Task<ActionResult<List<ProjectResponse>>> GetAll([FromQuery] QueryStringParameters parameters)
         {
-            var results = await _projectService.GetAllAsync();
+            var results = await _projectService.GetAllAsync(parameters);
+            var metadata = new
+            {
+                results.TotalCount,
+                results.PageSize,
+                results.CurrentPage,
+                results.HasNext,
+                results.HasPrevious
+            };
+
+            Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(results);
         }
 
         [HttpGet]
         [Route("{id:guid}")]
-        public async Task<ActionResult<ProjectDto>> GetById(Guid id)
+        public async Task<ActionResult<ProjectResponse>> GetById(Guid id)
         {
             var result = await _projectService.GetByIdAsync(id);
-            if (result == null)
-                return BadRequest("Project with given ID doesn't exist");
             return Ok(result);
         }
 
+
         [HttpPost]
-        public async Task<ActionResult<ProjectDto>> Add(ProjectCreateDto projectDto)
+        public async Task<ActionResult<ProjectResponse>> Add(ProjectCreateDto projectDto)
         {
             var project = await _projectService.AddAsync(projectDto);
-            return project == null ? BadRequest() : Ok(project);
+            return Ok(project);
         }
 
         [HttpPut]
-        public async Task<ActionResult<ProjectDto>> Update(ProjectUpdateDto projectDto)
+        public async Task<ActionResult<ProjectResponse>> Update(ProjectUpdateDto projectDto)
         {
             var project = await _projectService.UpdateAsync(projectDto);
-            return project == null ? BadRequest("Project with given ID doesn't exist") : Ok(project);
+            return Ok(project);
         }
 
         [HttpDelete]
@@ -53,9 +64,7 @@ namespace TimeSheet.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             bool success = await _projectService.DeleteAsync(id);
-            if (success)
-                return Ok();
-            return BadRequest("Project with given ID doesn't exist");
+            return Ok();
         }
 
 

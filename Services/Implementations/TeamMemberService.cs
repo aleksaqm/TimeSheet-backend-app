@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
+using Domain.Helpers;
+using Domain.QueryStrings;
 using Domain.Repositories;
 using Services.Abstractions;
 using Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Implementations
 {
@@ -23,41 +20,47 @@ namespace Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TeamMemberDto>> GetAllAsync()
+        public async Task<PaginatedList<TeamMemberResponse>> GetAllAsync(QueryStringParameters parameters)
         {
-            var members = await _repository.GetAllAsync();
-            return _mapper.Map<List<TeamMemberDto>>(members);
+            var members = await _repository.GetAllAsync(parameters);
+            var mapped = _mapper.Map<PaginatedList<TeamMemberResponse>>(members);
+            mapped.CurrentPage = members.CurrentPage;
+            mapped.TotalCount = members.TotalCount;
+            mapped.PageSize = members.PageSize;
+            mapped.TotalPages = members.TotalPages;
+            return mapped;
         }
 
-        public async Task<TeamMemberDto?> GetByIdAsync(Guid id)
+        public async Task<TeamMemberResponse?> GetByIdAsync(Guid id)
         {
             var member = await _repository.GetByIdAsync(id);
-            if (member == null)
-                return null;
-            return _mapper.Map<TeamMemberDto>(member);
+            if (member is null)
+            {
+                throw new TeamMemberNotFoundException("Team member with given ID doesnt exist");
+            }
+            return _mapper.Map<TeamMemberResponse>(member);
         }
 
-        public async Task<TeamMemberDto?> AddAsync(TeamMemberCreateDto teamMemberDto)
+        public async Task<IEnumerable<TeamMemberResponse>> GetActive()
+        {
+            var members = await _repository.GetActive();
+            return _mapper.Map<List<TeamMemberResponse>>(members);
+        }
+
+        public async Task<TeamMemberResponse?> AddAsync(TeamMemberCreateDto teamMemberDto)
         {
             var member = _mapper.Map<TeamMember>(teamMemberDto);
-            try
-            {
-                await _repository.AddAsync(member);
-                return _mapper.Map<TeamMemberDto>(member);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            await _repository.AddAsync(member);
+            return _mapper.Map<TeamMemberResponse>(member);
         }
 
-        public async Task<TeamMemberDto?> UpdateAsync(TeamMemberDto teamMemberDto)
+        public async Task<TeamMemberResponse?> UpdateAsync(TeamMemberUpdateDto teamMemberDto)
         {
             var member = _mapper.Map<TeamMember>(teamMemberDto);
             var existingMember = await _repository.GetByIdAsync(member.Id);
             if (existingMember is null)
             {
-                return null;
+                throw new TeamMemberNotFoundException("Team member with given ID doesnt exist");
             }
             existingMember.Name = member.Name;
             existingMember.Username = member.Username;
@@ -66,12 +69,19 @@ namespace Services.Implementations
             existingMember.Status.StatusName = member.Status.StatusName;
             existingMember.Role = member.Role;
             await _repository.UpdateAsync();
-            return _mapper.Map<TeamMemberDto>(existingMember);
+            return _mapper.Map<TeamMemberResponse>(existingMember);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            return await _repository.DeleteAsync(id);
+            bool success = await _repository.DeleteAsync(id);
+            if (success)
+            {
+                return true;
+            }
+            throw new TeamMemberNotFoundException("Team member with given ID doesnt exist");
         }
+
+
     }
 }

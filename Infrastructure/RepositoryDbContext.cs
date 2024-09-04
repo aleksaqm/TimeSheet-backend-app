@@ -12,8 +12,6 @@ namespace Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
             var categoryModelBuilder = new CategoryModelBuilder(modelBuilder);
             categoryModelBuilder.OnModelCreating();
 
@@ -31,7 +29,6 @@ namespace Infrastructure
 
             var activityModelBuilder = new ActivityModelBuilder(modelBuilder);
             activityModelBuilder.OnModelCreating();
-
         }
 
         public DbSet<Category> Categories { get; set; }

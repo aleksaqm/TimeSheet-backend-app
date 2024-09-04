@@ -1,16 +1,13 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Helpers;
+using Domain.QueryStrings;
 
 namespace Domain.Repositories
 {
     public interface ICategoryRepository
     {
         Task<Category?> GetByIdAsync(Guid id);
-        Task<IEnumerable<Category>> GetAllAsync();
+        Task<PaginatedList<Category>> GetAllAsync(QueryStringParameters parameters);
         Task AddAsync(Category category);
         Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);

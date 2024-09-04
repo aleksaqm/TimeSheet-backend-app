@@ -1,16 +1,16 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Helpers;
+using Domain.QueryStrings;
 
 namespace Domain.Repositories
 {
     public interface ITeamMemberRepository
     {
         Task<TeamMember?> GetByIdAsync(Guid id);
-        Task<IEnumerable<TeamMember>> GetAllAsync();
+        Task<TeamMember?> GetByUsernameAsync(string username);
+        Task<TeamMember?> GetByEmailAsync(string email);
+        Task<PaginatedList<TeamMember>> GetAllAsync(QueryStringParameters parameters);
+        Task<IEnumerable<TeamMember>> GetActive();
         Task AddAsync(TeamMember member);
         Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);

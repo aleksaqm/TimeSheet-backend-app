@@ -1,11 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
+using Domain.QueryStrings;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -18,9 +15,19 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-        public async Task<IEnumerable<TeamMember>> GetAllAsync()
+        public async Task<PaginatedList<TeamMember>> GetAllAsync(QueryStringParameters parameters)
         {
-            var members = await _dbContext.TeamMembers.Include(t => t.Status).ToArrayAsync();
+            parameters.SearchText ??= string.Empty;
+            parameters.FirstLetter ??= string.Empty;
+            var allMembers = _dbContext.TeamMembers
+                .Where(a => (a.Name.StartsWith(parameters.FirstLetter) ||
+                             a.Name.Contains(" " + parameters.FirstLetter))
+                            && a.Name.Contains(parameters.SearchText)
+                            && a.Status.StatusName == "Active")
+                .Include(t => t.Status);
+            var members =
+                PaginatedList<TeamMember>.ToPagedList(allMembers, parameters.PageNumber,
+                    parameters.PageSize);
             return members;
         }
 
@@ -29,6 +36,14 @@ namespace Infrastructure.Repositories
             return await _dbContext.TeamMembers
                 .Include(t => t.Status)
                 .SingleOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<IEnumerable<TeamMember>> GetActive()
+        {
+            return await _dbContext.TeamMembers
+                .Where(t => t.Status.StatusName == "Active")
+                .Include(t => t.Status)
+                .ToArrayAsync();
         }
 
         public async Task AddAsync(TeamMember member)
@@ -45,11 +60,27 @@ namespace Infrastructure.Repositories
         public async Task<bool> DeleteAsync(Guid id)
         {
             var existingMember = await _dbContext.TeamMembers.FindAsync(id);
-            if (existingMember == null)
+            if (existingMember is null)
+            {
                 return false;
+            }
             _dbContext.TeamMembers.Remove(existingMember);
             await _dbContext.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<TeamMember?> GetByUsernameAsync(string username)
+        {
+            return await _dbContext.TeamMembers
+                .Include(t => t.Status)
+                .SingleOrDefaultAsync(t => t.Username == username);
+        }
+
+        public async Task<TeamMember?> GetByEmailAsync(string email)
+        {
+            return await _dbContext.TeamMembers
+                .Include(t => t.Status)
+                .SingleOrDefaultAsync(t => t.Email == email);
         }
     }
 }

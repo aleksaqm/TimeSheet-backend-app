@@ -1,16 +1,14 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Helpers;
+using Domain.QueryStrings;
 
 namespace Domain.Repositories
 {
     public interface IProjectRepository
     {
         Task<Project?> GetByIdAsync(Guid id);
-        Task<IEnumerable<Project>> GetAllAsync();
+        Task<PaginatedList<Project>> GetAllAsync(QueryStringParameters parameters);
+        Task<IEnumerable<Project>> GetByStatus(string status);
         Task AddAsync(Project project);
         Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);

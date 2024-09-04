@@ -1,11 +1,5 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.ModelBuilders
 {
@@ -45,6 +39,11 @@ namespace Infrastructure.ModelBuilders
                 .HasForeignKey("StatusId")
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
+
+            _modelBuilder.Entity<TeamMember>()
+                .HasIndex(a => a.Username);
+            _modelBuilder.Entity<TeamMember>()
+                .HasIndex(a => a.Email);
         }
     }
 }

@@ -1,11 +1,5 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.ModelBuilders
 {
@@ -17,7 +11,7 @@ namespace Infrastructure.ModelBuilders
             _modelBuilder = builder;
         }
 
-        public void OnModelCreating()
+        public async void OnModelCreating()
         {
             _modelBuilder.Entity<Activity>().HasKey(a => a.Id);
             _modelBuilder.Entity<Activity>()
@@ -56,6 +50,19 @@ namespace Infrastructure.ModelBuilders
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.NoAction)
                 .IsRequired();
+
+            _modelBuilder.Entity<Activity>()
+                .Property<int>("Year")
+                .HasComputedColumnSql("YEAR([Date])");
+            _modelBuilder.Entity<Activity>()
+                .Property<int>("Month")
+                .HasComputedColumnSql("MONTH([Date])");
+
+
+            _modelBuilder.Entity<Activity>()
+                .HasIndex("Year", "Month");
+            _modelBuilder.Entity<Activity>()
+                .HasIndex(a => a.Date);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -57,9 +57,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     HoursPerWeek = table.Column<double>(type: "float", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -71,7 +71,8 @@ namespace Infrastructure.Migrations
                         name: "FK_TeamMembers_Statuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "Statuses",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -117,7 +118,9 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Hours = table.Column<double>(type: "float", nullable: false),
                     Overtime = table.Column<double>(type: "float", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Month = table.Column<int>(type: "int", nullable: false, computedColumnSql: "MONTH([Date])"),
+                    Year = table.Column<int>(type: "int", nullable: false, computedColumnSql: "YEAR([Date])")
                 },
                 constraints: table =>
                 {
@@ -155,6 +158,11 @@ namespace Infrastructure.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Activities_Date",
+                table: "Activities",
+                column: "Date");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Activities_ProjectId",
                 table: "Activities",
                 column: "ProjectId");
@@ -163,6 +171,17 @@ namespace Infrastructure.Migrations
                 name: "IX_Activities_UserId",
                 table: "Activities",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Activities_Year_Month",
+                table: "Activities",
+                columns: new[] { "Year", "Month" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_Name",
+                table: "Clients",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_CustomerId",
@@ -180,9 +199,19 @@ namespace Infrastructure.Migrations
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TeamMembers_Email",
+                table: "TeamMembers",
+                column: "Email");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TeamMembers_StatusId",
                 table: "TeamMembers",
                 column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TeamMembers_Username",
+                table: "TeamMembers",
+                column: "Username");
         }
 
         /// <inheritdoc />

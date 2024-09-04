@@ -1,11 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
+using Domain.QueryStrings;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -18,10 +15,14 @@ namespace Infrastructure.Repositories
             _dbContext = context;
         }
 
-
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<PaginatedList<Category>> GetAllAsync(QueryStringParameters parameters)
         {
-            var categories = await _dbContext.Categories.ToArrayAsync();
+            parameters.SearchText ??= string.Empty;
+            parameters.FirstLetter ??= string.Empty;
+            var allCategories = from c in _dbContext.Categories
+                           where c.Name.StartsWith(parameters.FirstLetter) && c.Name.Contains(parameters.SearchText)
+                           select c;
+            var categories = PaginatedList<Category>.ToPagedList(allCategories, parameters.PageNumber, parameters.PageSize);
             return categories;
         }
 
@@ -44,7 +45,7 @@ namespace Infrastructure.Repositories
         public async Task<bool> DeleteAsync(Guid id)
         {
             var existingCategory = await _dbContext.Categories.FindAsync(id);
-            if (existingCategory == null)
+            if (existingCategory is null)
             {
                 return false;
             }
