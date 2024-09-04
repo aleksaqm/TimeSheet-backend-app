@@ -17,10 +17,7 @@ namespace Infrastructure.Repositories
 
         public async Task<PaginatedList<Client>> GetAllAsync(QueryStringParameters parameters)
         {
-            //parameters.SearchText ??= string.Empty;
-            //parameters.FirstLetter ??= string.Empty;
-            //var allClients = from c in _dbContext.Clients select c;
-            //where c.Name.StartsWith(parameters.FirstLetter) && c.Name.Contains(parameters.SearchText)
+            
             var query = _dbContext.Clients.AsQueryable();
             if (parameters.SearchText is not null)
             {

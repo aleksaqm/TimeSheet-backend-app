@@ -17,14 +17,20 @@ namespace Infrastructure.Repositories
 
         public async Task<PaginatedList<Project>> GetAllAsync(QueryStringParameters parameters)
         {
-            parameters.SearchText ??= string.Empty;
-            parameters.FirstLetter ??= string.Empty;
-            var allProjects = _dbContext.Projects
-                .Where(p => p.Name.StartsWith(parameters.FirstLetter) && p.Name.Contains(parameters.SearchText))
+            var query = _dbContext.Projects.AsQueryable();
+            if (parameters.SearchText is not null)
+            {
+                query = query.Where(p => p.Name.Contains(parameters.SearchText));
+            }
+            if (parameters.FirstLetter is not null)
+            {
+                query = query.Where(p => p.Name.StartsWith(parameters.FirstLetter));
+            }
+            query = query
                 .Include(p => p.Status)
                 .Include(p => p.Customer)
                 .Include(p => p.Lead);
-            var projects = PaginatedList<Project>.ToPagedList(allProjects, parameters.PageNumber, parameters.PageSize);
+            var projects = PaginatedList<Project>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
             return projects;
         }
 

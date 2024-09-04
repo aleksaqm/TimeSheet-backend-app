@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Services.Abstractions;
 using Shared;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TimeSheet.Controllers
 {
@@ -19,6 +20,7 @@ namespace TimeSheet.Controllers
             _projectService = service;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<ProjectResponse>>> GetAll([FromQuery] QueryStringParameters parameters)
         {
@@ -36,6 +38,7 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<ActionResult<ProjectResponse>> GetById(Guid id)
@@ -44,7 +47,7 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<ProjectResponse>> Add(ProjectCreateDto projectDto)
         {
@@ -52,6 +55,7 @@ namespace TimeSheet.Controllers
             return Ok(project);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<ProjectResponse>> Update(ProjectUpdateDto projectDto)
         {
@@ -59,6 +63,7 @@ namespace TimeSheet.Controllers
             return Ok(project);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)

@@ -1,4 +1,5 @@
 ﻿using Domain.QueryStrings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ namespace TimeSheet.Controllers
             _clientService = service;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<ClientResponse>>> GetAll([FromQuery] QueryStringParameters parameters)
         {
@@ -35,6 +37,7 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<ActionResult<ClientResponse>> GetById(Guid id)
@@ -43,6 +46,7 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<ClientResponse>> Add(ClientCreateDto clientDto)
         {
@@ -50,6 +54,7 @@ namespace TimeSheet.Controllers
             return Ok(client);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<ClientResponse>> Update(ClientUpdateDto clientDto)
         {
@@ -57,6 +62,7 @@ namespace TimeSheet.Controllers
             return Ok(client);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)

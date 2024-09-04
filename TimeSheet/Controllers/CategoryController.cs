@@ -1,4 +1,5 @@
 ﻿using Domain.QueryStrings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ namespace TimeSheet.Controllers
             _categoryService = service;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<CategoryResponse>>> GetAll([FromQuery] QueryStringParameters parameters) { 
             var results = await _categoryService.GetAllAsync(parameters);
@@ -36,6 +38,7 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<ActionResult<CategoryResponse>> GetById(Guid id) {
@@ -43,18 +46,21 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CategoryResponse>> Add(CategoryCreateDto categoryDto) { 
             var category = await _categoryService.AddAsync(categoryDto);
             return Ok(category);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<CategoryResponse>> Update(CategoryUpdateDto categoryDto) { 
             var category = await _categoryService.UpdateAsync(categoryDto);
             return Ok(category);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id) { 

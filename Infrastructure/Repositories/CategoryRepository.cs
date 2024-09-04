@@ -17,12 +17,16 @@ namespace Infrastructure.Repositories
 
         public async Task<PaginatedList<Category>> GetAllAsync(QueryStringParameters parameters)
         {
-            parameters.SearchText ??= string.Empty;
-            parameters.FirstLetter ??= string.Empty;
-            var allCategories = from c in _dbContext.Categories
-                           where c.Name.StartsWith(parameters.FirstLetter) && c.Name.Contains(parameters.SearchText)
-                           select c;
-            var categories = PaginatedList<Category>.ToPagedList(allCategories, parameters.PageNumber, parameters.PageSize);
+            var query = _dbContext.Categories.AsQueryable();
+            if (parameters.SearchText is not null)
+            {
+                query = query.Where(c => c.Name.Contains(parameters.SearchText));
+            }
+            if (parameters.FirstLetter is not null)
+            {
+                query = query.Where(c => c.Name.StartsWith(parameters.FirstLetter));
+            }
+            var categories = PaginatedList<Category>.ToPagedList(query, parameters.PageNumber, parameters.PageSize);
             return categories;
         }
 

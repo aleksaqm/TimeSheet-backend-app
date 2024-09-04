@@ -17,16 +17,21 @@ namespace Infrastructure.Repositories
 
         public async Task<PaginatedList<TeamMember>> GetAllAsync(QueryStringParameters parameters)
         {
-            parameters.SearchText ??= string.Empty;
-            parameters.FirstLetter ??= string.Empty;
-            var allMembers = _dbContext.TeamMembers
-                .Where(a => (a.Name.StartsWith(parameters.FirstLetter) ||
-                             a.Name.Contains(" " + parameters.FirstLetter))
-                            && a.Name.Contains(parameters.SearchText)
-                            && a.Status.StatusName == "Active")
-                .Include(t => t.Status);
+            var query = _dbContext.TeamMembers.Where(t => t.Status.StatusName == "Active").AsQueryable();
+            if (parameters.SearchText is not null)
+            {
+                query = query.Where(t => t.Name.Contains(parameters.SearchText));
+            }
+            if (parameters.FirstLetter is not null)
+            {
+                query = query.Where(t => t.Name.StartsWith(parameters.FirstLetter) ||
+                                         t.Name.Contains(" " + parameters.FirstLetter));
+            }
+
+            query = query.Include(t => t.Status);
+
             var members =
-                PaginatedList<TeamMember>.ToPagedList(allMembers, parameters.PageNumber,
+                PaginatedList<TeamMember>.ToPagedList(query, parameters.PageNumber,
                     parameters.PageSize);
             return members;
         }
