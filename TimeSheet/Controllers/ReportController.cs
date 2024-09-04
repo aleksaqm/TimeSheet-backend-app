@@ -6,16 +6,18 @@ using Shared;
 
 namespace TimeSheet.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportController : ControllerBase
     {
         private readonly IReportService _reportService;
+        private readonly IPdfService _pdfService;
 
-        public ReportController(IReportService service)
+        public ReportController(IReportService service, IPdfService pdfService)
         {
             _reportService = service;
+            _pdfService = pdfService;
         }
 
         [HttpGet]
@@ -24,5 +26,14 @@ namespace TimeSheet.Controllers
             var result = await _reportService.GetReportAsync(reportDto);
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("Pdf")]
+        public FileResult GeneratePdf([FromBody] ReportPdfDto report)
+        {
+            var pdf = _pdfService.GenerateReportPdf(report);
+            return File(pdf, "application/pdf", "report.pdf");
+        }
+
     }
 }
