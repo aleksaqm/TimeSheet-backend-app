@@ -6,7 +6,7 @@ using Shared;
 
 namespace TimeSheet.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportController : ControllerBase

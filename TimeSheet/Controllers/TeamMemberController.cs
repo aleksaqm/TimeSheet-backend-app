@@ -27,7 +27,6 @@ namespace TimeSheet.Controllers
             var results = await _teamMemberService.GetAllAsync(parameters);
             var metadata = new
             {
-                results.TotalCount,
                 results.PageSize,
                 results.CurrentPage,
                 results.HasNext,

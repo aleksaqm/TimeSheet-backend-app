@@ -26,7 +26,6 @@ namespace TimeSheet.Controllers
 
             var metadata = new
             {
-                results.TotalCount,
                 results.PageSize,
                 results.CurrentPage,
                 results.HasNext,

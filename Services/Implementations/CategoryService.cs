@@ -25,9 +25,8 @@ namespace Services.Implementations
             var categories = await _repository.GetAllAsync(parameters);
             var mapped = _mapper.Map<PaginatedList<CategoryResponse>>(categories);
             mapped.CurrentPage = categories.CurrentPage;
-            mapped.TotalCount = categories.TotalCount;
             mapped.PageSize = categories.PageSize;
-            mapped.TotalPages = categories.TotalPages;
+            mapped.HasNext = categories.HasNext;
             return mapped;
         }
 

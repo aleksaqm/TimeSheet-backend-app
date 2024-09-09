@@ -25,9 +25,8 @@ namespace Services.Implementations
             var clients = await _repository.GetAllAsync(parameters);
             var mapped = _mapper.Map<PaginatedList<ClientResponse>>(clients);
             mapped.CurrentPage = clients.CurrentPage;
-            mapped.TotalCount = clients.TotalCount;
+            mapped.HasNext = clients.HasNext;
             mapped.PageSize = clients.PageSize;
-            mapped.TotalPages = clients.TotalPages;
             return mapped;
         }
 
