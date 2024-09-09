@@ -6,7 +6,7 @@ using Shared;
 
 namespace TimeSheet.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportController : ControllerBase
@@ -29,19 +29,19 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Pdf")]
-        public FileResult GeneratePdf([FromBody] ReportPdfDto report)
+        public async Task<FileResult> GeneratePdf([FromQuery] GetReportDto reportDto)
         {
-            var pdf = _pdfService.GenerateReportPdf(report);
+            var pdf = await _pdfService.GenerateReportPdf(reportDto);
             return File(pdf, "application/pdf", "report.pdf");
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Excel")]
-        public FileResult ExportToExcel(IEnumerable<ReportDto> reports)
+        public async Task<FileResult> ExportToExcel([FromQuery] GetReportDto reportDto)
         {
-            var excelFile = _excelService.ExportToExcel(reports);
+            var excelFile = await _excelService.ExportToExcel(reportDto);
             return File(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
         }
 

@@ -8,6 +8,7 @@ using Shared;
 
 namespace TimeSheet.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClientController : ControllerBase
@@ -19,7 +20,6 @@ namespace TimeSheet.Controllers
             _clientService = service;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<ClientResponse>>> GetAll([FromQuery] QueryStringParameters parameters)
         {
@@ -36,7 +36,6 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
-        [Authorize]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<ActionResult<ClientResponse>> GetById(Guid id)

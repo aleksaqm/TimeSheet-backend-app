@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TimeSheet.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase
@@ -20,7 +21,6 @@ namespace TimeSheet.Controllers
             _projectService = service;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<ProjectResponse>>> GetAll([FromQuery] QueryStringParameters parameters)
         {
@@ -37,7 +37,6 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
-        [Authorize]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<ActionResult<ProjectResponse>> GetById(Guid id)

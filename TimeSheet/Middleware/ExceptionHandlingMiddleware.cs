@@ -5,7 +5,6 @@ using Shared;
 using System;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Domain.Entities;
 
 namespace TimeSheet.Middleware
 {

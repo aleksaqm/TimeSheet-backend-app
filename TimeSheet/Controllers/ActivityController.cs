@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ActivityController : ControllerBase
@@ -25,7 +26,6 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
-        [Authorize]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<ActionResult<ActivityResponse>> GetById(Guid id)
@@ -34,7 +34,6 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
-        [Authorize]
         [HttpGet]
         [Route("Days")]
         public async Task<ActionResult<List<WorkDayDto>>> GetActivitiesForPeriod([Required] DateTime startDate, [Required] DateTime endDate, [Required] Guid userId)
@@ -43,7 +42,6 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
-        [Authorize]
         [HttpGet]
         [Route("Hours")]
         public async Task<ActionResult<DaysHoursResponse>> GetHoursForPeriod([Required] DateTime startDate, [Required] DateTime endDate, [Required] Guid userId)
@@ -52,7 +50,6 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ActivityResponse>> Add(ActivityCreateDto activityDto)
         {
@@ -60,7 +57,6 @@ namespace TimeSheet.Controllers
             return Ok(activity);
         }
 
-        [Authorize]
         [HttpPut]
         public async Task<ActionResult<ActivityResponse>> Update(ActivityUpdateDto activityDto)
         {
@@ -68,7 +64,6 @@ namespace TimeSheet.Controllers
             return Ok(activity);
         }
 
-        [Authorize]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)

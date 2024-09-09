@@ -2,7 +2,6 @@
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Shared;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infrastructure.Repositories
 {

@@ -9,6 +9,6 @@ namespace Services.Abstractions
 {
     public interface IPdfService
     {
-        byte[] GenerateReportPdf(ReportPdfDto report);
+        Task<byte[]> GenerateReportPdf(GetReportDto report);
     }
 }

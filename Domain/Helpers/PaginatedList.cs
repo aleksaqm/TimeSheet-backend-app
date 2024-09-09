@@ -30,7 +30,7 @@ namespace Domain.Helpers
             }
             else
             {
-                AddRange(items);
+                AddRange(items);        
             }
         }
         public static PaginatedList<T> ToPagedList(IQueryable<T> source, int pageNumber, int pageSize)

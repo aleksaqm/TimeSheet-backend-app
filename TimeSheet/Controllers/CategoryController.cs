@@ -8,6 +8,7 @@ using Shared;
 
 namespace TimeSheet.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -19,7 +20,6 @@ namespace TimeSheet.Controllers
             _categoryService = service;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<CategoryResponse>>> GetAll([FromQuery] QueryStringParameters parameters) { 
             var results = await _categoryService.GetAllAsync(parameters);
@@ -37,7 +37,6 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
-        [Authorize]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<ActionResult<CategoryResponse>> GetById(Guid id) {
@@ -47,14 +46,14 @@ namespace TimeSheet.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult<CategoryResponse>> Add(CategoryCreateDto categoryDto) { 
+        public async Task<ActionResult<CategoryResponse>> Add(CategoryCreateDto categoryDto){ 
             var category = await _categoryService.AddAsync(categoryDto);
             return Ok(category);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPut]
-        public async Task<ActionResult<CategoryResponse>> Update(CategoryUpdateDto categoryDto) { 
+        public async Task<ActionResult<CategoryResponse>> Update(CategoryUpdateDto categoryDto){ 
             var category = await _categoryService.UpdateAsync(categoryDto);
             return Ok(category);
         }

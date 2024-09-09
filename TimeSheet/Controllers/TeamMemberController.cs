@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TimeSheet.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TeamMemberController : ControllerBase
@@ -20,7 +21,6 @@ namespace TimeSheet.Controllers
             _teamMemberService = service;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<TeamMemberResponse>>> GetAll([FromQuery] QueryStringParameters parameters)
         {
@@ -37,7 +37,6 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
-        [Authorize]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<ActionResult<TeamMemberResponse>> GetById(Guid id)
@@ -46,7 +45,6 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
-        [Authorize]
         [HttpGet]
         [Route("Active")]
         public async Task<ActionResult<List<TeamMemberResponse>>> GetActive()
@@ -55,7 +53,6 @@ namespace TimeSheet.Controllers
             return Ok(results);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<TeamMemberResponse>> Add(TeamMemberCreateDto teamMemberDto)
         {
@@ -63,7 +60,6 @@ namespace TimeSheet.Controllers
             return Ok(member);
         }
 
-        [Authorize]
         [HttpPut]
         public async Task<ActionResult<TeamMemberResponse>> Update(TeamMemberUpdateDto teamMemberDto)
         {

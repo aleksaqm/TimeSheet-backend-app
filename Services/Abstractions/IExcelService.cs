@@ -9,6 +9,6 @@ namespace Services.Abstractions
 {
     public interface IExcelService
     {
-        byte[] ExportToExcel(IEnumerable<ReportDto> report);
+        Task<byte[]> ExportToExcel(GetReportDto reportDto);
     }
 }

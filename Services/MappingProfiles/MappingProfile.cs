@@ -1,7 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Entities;
-using Domain.Helpers;
 using Shared;
 
 namespace Services.MappingProfiles

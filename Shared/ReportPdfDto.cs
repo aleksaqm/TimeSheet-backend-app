@@ -8,10 +8,10 @@ namespace Shared
 {
     public class ReportPdfDto
     {
-        public string TeamMember { get; set; }
-        public string Client { get; set; }
-        public string Project { get; set; }
-        public string Category { get; set; }
+        public Guid? TeamMember { get; set; }
+        public Guid? Client { get; set; }
+        public Guid? Project { get; set; }
+        public Guid? Category { get; set; }
         public required DateTime StartDate { get; set; }
         public required DateTime EndDate { get; set; }
         public double ReportTotalHours { get; set; }

@@ -2,7 +2,6 @@
 using Domain.Helpers;
 using Domain.QueryStrings;
 using Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
