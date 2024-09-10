@@ -50,6 +50,8 @@ namespace Services.Implementations
         public async Task<TeamMemberResponse?> AddAsync(TeamMemberCreateDto teamMemberDto)
         {
             var member = _mapper.Map<TeamMember>(teamMemberDto);
+            member.Password = [];
+            member.PasswordSalt = [];
             await _unitOfWork.TeamMemberRepository.AddAsync(member);
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<TeamMemberResponse>(member);

@@ -31,8 +31,13 @@ namespace Services.Implementations
             {
                 throw new InvalidLoginCredentialsException("User with given email doesnt exist");
             }
-            var hmac = new HMACSHA512(user.PasswordSalt);
-            var passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+            if (user.Password is [] && user.PasswordSalt is [])
+            {
+                await UpdatePassword(user, loginDto.Password);
+                return _tokenService.CreateToken(user);
+            }
+            var hashFn = new HMACSHA512(user.PasswordSalt);
+            var passwordHash = hashFn.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
             for (int i = 0; i < passwordHash.Length; i++)
             {
@@ -43,6 +48,17 @@ namespace Services.Implementations
             }
 
             return _tokenService.CreateToken(user);
+        }
+
+        private async Task UpdatePassword(TeamMember user, string password)
+        {
+            var hashFn = new HMACSHA512();
+            var passwordHash = hashFn.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            user.Password = passwordHash;
+            user.PasswordSalt = hashFn.Key;
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<RegisterDto> Register(RegisterDto registerDto)
@@ -56,8 +72,8 @@ namespace Services.Implementations
                 throw new EmailAlreadyExistsException("User with this email is already registered. Try another email");
             }
 
-            var hmac = new HMACSHA512();
-            var passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            var hashFn = new HMACSHA512();
+            var passwordHash = hashFn.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
 
             var teamMember = new TeamMember
             {
@@ -65,7 +81,7 @@ namespace Services.Implementations
                 Username = registerDto.Username,
                 Email = registerDto.Email,
                 Password = passwordHash,
-                PasswordSalt = hmac.Key,
+                PasswordSalt = hashFn.Key,
                 Role = registerDto.Role,
                 Status = new Status { StatusName = "Active" }
             };
