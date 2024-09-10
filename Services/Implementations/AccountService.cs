@@ -59,9 +59,6 @@ namespace Services.Implementations
             var hmac = new HMACSHA512();
             var passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
 
-            Role role;
-            Enum.TryParse(registerDto.Role, out role);
-
             var teamMember = new TeamMember
             {
                 Name = registerDto.Name,
@@ -69,7 +66,7 @@ namespace Services.Implementations
                 Email = registerDto.Email,
                 Password = passwordHash,
                 PasswordSalt = hmac.Key,
-                Role = role,
+                Role = registerDto.Role,
                 Status = new Status { StatusName = "Active" }
             };
             await _unitOfWork.TeamMemberRepository.AddAsync(teamMember);

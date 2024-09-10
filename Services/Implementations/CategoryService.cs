@@ -6,6 +6,7 @@ using Domain.QueryStrings;
 using Domain.Repositories;
 using Infrastructure.UnitOfWork;
 using Service.Abstractions;
+using Services.Converters;
 using Shared;
 
 namespace Services.Implementations
@@ -25,9 +26,7 @@ namespace Services.Implementations
         {
             var categories = await _unitOfWork.CategoryRepository.GetAllAsync(parameters);
             var mapped = _mapper.Map<PaginatedList<CategoryResponse>>(categories);
-            mapped.CurrentPage = categories.CurrentPage;
-            mapped.PageSize = categories.PageSize;
-            mapped.HasNext = categories.HasNext;
+            PaginatedListConverter<Category, CategoryResponse>.Convert(categories, mapped);
             return mapped;
         }
 

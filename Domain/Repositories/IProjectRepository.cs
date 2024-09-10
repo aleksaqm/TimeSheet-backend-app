@@ -10,7 +10,6 @@ namespace Domain.Repositories
         Task<PaginatedList<Project>> GetAllAsync(QueryStringParameters parameters);
         Task<IEnumerable<Project>> GetByStatus(string status);
         Task AddAsync(Project project);
-        Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);
     }
 }

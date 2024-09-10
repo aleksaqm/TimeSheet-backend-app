@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Domain.Repositories;
+using Infrastructure.UnitOfWork;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -11,10 +12,7 @@ namespace Services.Implementations
 {
     public class PdfService : IPdfService
     {
-        private readonly ITeamMemberRepository _teamMemberRepository;
-        private readonly IClientRepository _clientRepository;
-        private readonly IProjectRepository _projectRepository;
-        //private readonly ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IReportService _reportService;
 
         private string _teamMemberName = "All";
@@ -22,12 +20,9 @@ namespace Services.Implementations
         private string _projectName = "All";
         private string _categoryName = "All";
 
-        public PdfService(ITeamMemberRepository teamMemberRepo, IClientRepository clientRepo, IProjectRepository projectRepo, IReportService reportService)
+        public PdfService(IUnitOfWork unitOfWork, IReportService reportService)
         {
-            _teamMemberRepository = teamMemberRepo;   
-            _clientRepository = clientRepo;
-            _projectRepository = projectRepo;
-            //_categoryRepository = categoryRepo;
+            _unitOfWork = unitOfWork;
             _reportService = reportService;
         }
 
@@ -163,7 +158,7 @@ namespace Services.Implementations
         {
             if (report.TeamMemberId.HasValue)
             {
-                var member = await _teamMemberRepository.GetByIdAsync((Guid)report.TeamMemberId);
+                var member = await _unitOfWork.TeamMemberRepository.GetByIdAsync((Guid)report.TeamMemberId);
                 if (member is not null)
                 {
                     _teamMemberName = member.Name;
@@ -171,7 +166,7 @@ namespace Services.Implementations
             }
             if (report.ClientId.HasValue)
             {
-                var client = await _clientRepository.GetByIdAsync((Guid)report.ClientId);
+                var client = await _unitOfWork.ClientRepository.GetByIdAsync((Guid)report.ClientId);
                 if (client is not null)
                 {
                     _clientName = client.Name;
@@ -179,21 +174,21 @@ namespace Services.Implementations
             }
             if (report.ProjectId.HasValue)
             {
-                var project = await _projectRepository.GetByIdAsync((Guid)report.ProjectId);
+                var project = await _unitOfWork.ProjectRepository.GetByIdAsync((Guid)report.ProjectId);
                 if (project is not null)
                 {
                     _projectName = project.Name;
                 }
             }
-            //if (report.CategoryId.HasValue)
-            //{
-            //    var category = await _categoryRepository.GetByIdAsync((Guid)report.CategoryId);
-            //    if (category is not null)
-            //    {
-            //        _categoryName = category.Name;
-            //    }
-            //}
-            
+            if (report.CategoryId.HasValue)
+            {
+                var category = await _unitOfWork.CategoryRepository.GetByIdAsync((Guid)report.CategoryId);
+                if (category is not null)
+                {
+                    _categoryName = category.Name;
+                }
+            }
+
         }
 
     }

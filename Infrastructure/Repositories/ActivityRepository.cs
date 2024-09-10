@@ -65,12 +65,6 @@ namespace Infrastructure.Repositories
         public async Task AddAsync(Activity activity)
         {
             await _dbContext.Activities.AddAsync(activity);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync()
-        {
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -81,7 +75,6 @@ namespace Infrastructure.Repositories
                 return false;
             }
             _dbContext.Activities.Remove(existingActivity);
-            await _dbContext.SaveChangesAsync();
             return true;
         }
 
