@@ -37,13 +37,8 @@ namespace Infrastructure.Repositories
         public async Task AddAsync(Category category)
         {
             await _dbContext.Categories.AddAsync(category);
-            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync()
-        {
-            await _dbContext.SaveChangesAsync();
-        }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
@@ -53,7 +48,6 @@ namespace Infrastructure.Repositories
                 return false;
             }
             _dbContext.Categories.Remove(existingCategory);
-            await _dbContext.SaveChangesAsync();
             return true;
         }
     }

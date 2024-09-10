@@ -6,26 +6,27 @@ using Services.Abstractions;
 using Shared;
 using System.Text;
 using System.Security.Cryptography;
+using Infrastructure.UnitOfWork;
 
 
 namespace Services.Implementations
 {
     public class AccountService : IAccountService
     {
-        private readonly ITeamMemberRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public AccountService(ITeamMemberRepository repository, ITokenService tokenService, IMapper mapper)
+        public AccountService(IUnitOfWork unitOfWork, ITokenService tokenService, IMapper mapper)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _tokenService = tokenService;
             _mapper = mapper;
         }
 
         public async Task<string> Login(LoginDto loginDto)
         {
-            var user = await _repository.GetByEmailAsync(loginDto.Email);
+            var user = await _unitOfWork.TeamMemberRepository.GetByEmailAsync(loginDto.Email);
             if (user is null)
             {
                 throw new InvalidLoginCredentialsException("User with given email doesnt exist");
@@ -46,11 +47,11 @@ namespace Services.Implementations
 
         public async Task<RegisterDto> Register(RegisterDto registerDto)
         {
-            if (await _repository.GetByUsernameAsync(registerDto.Username) is not null)
+            if (await _unitOfWork.TeamMemberRepository.GetByUsernameAsync(registerDto.Username) is not null)
             {
                 throw new UsernameAlreadyTakenException("Username is already taken by another user. Try another username");
             }
-            if (await _repository.GetByEmailAsync(registerDto.Email) is not null)
+            if (await _unitOfWork.TeamMemberRepository.GetByEmailAsync(registerDto.Email) is not null)
             {
                 throw new EmailAlreadyExistsException("User with this email is already registered. Try another email");
             }
@@ -71,7 +72,8 @@ namespace Services.Implementations
                 Role = role,
                 Status = new Status { StatusName = "Active" }
             };
-            await _repository.AddAsync(teamMember);
+            await _unitOfWork.TeamMemberRepository.AddAsync(teamMember);
+            await _unitOfWork.SaveChangesAsync();
             return registerDto;
         }
     }

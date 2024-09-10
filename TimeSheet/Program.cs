@@ -1,6 +1,7 @@
 using Domain.Repositories;
 using Infrastructure;
 using Infrastructure.Repositories;
+using Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -42,20 +43,22 @@ public class Program
                 };
             });
 
+        builder.Services.AddScoped<IUnitOfWork,  UnitOfWork>();
+
 
         builder.Services.AddTransient<ICategoryService, CategoryService>();
-        builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+        //builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
-        builder.Services.AddTransient<ITeamMemberRepository, TeamMemberRepository>();
+        //builder.Services.AddTransient<ITeamMemberRepository, TeamMemberRepository>();
         builder.Services.AddTransient<ITeamMemberService, TeamMemberService>();
 
-        builder.Services.AddTransient<IClientRepository, ClientRepository>();
+        //builder.Services.AddTransient<IClientRepository, ClientRepository>();
         builder.Services.AddTransient<IClientService, ClientService>();
 
-        builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+        //builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
         builder.Services.AddTransient<IProjectService, ProjectService>();
 
-        builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
+        //builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
         builder.Services.AddTransient<IActivityService, ActivityService>();
 
         builder.Services.AddTransient<IReportService, ReportService>();

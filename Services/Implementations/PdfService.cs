@@ -14,7 +14,7 @@ namespace Services.Implementations
         private readonly ITeamMemberRepository _teamMemberRepository;
         private readonly IClientRepository _clientRepository;
         private readonly IProjectRepository _projectRepository;
-        private readonly ICategoryRepository _categoryRepository;
+        //private readonly ICategoryRepository _categoryRepository;
         private readonly IReportService _reportService;
 
         private string _teamMemberName = "All";
@@ -22,12 +22,12 @@ namespace Services.Implementations
         private string _projectName = "All";
         private string _categoryName = "All";
 
-        public PdfService(ITeamMemberRepository teamMemberRepo, IClientRepository clientRepo, IProjectRepository projectRepo, ICategoryRepository categoryRepo, IReportService reportService)
+        public PdfService(ITeamMemberRepository teamMemberRepo, IClientRepository clientRepo, IProjectRepository projectRepo, IReportService reportService)
         {
             _teamMemberRepository = teamMemberRepo;   
             _clientRepository = clientRepo;
             _projectRepository = projectRepo;
-            _categoryRepository = categoryRepo;
+            //_categoryRepository = categoryRepo;
             _reportService = reportService;
         }
 
@@ -185,14 +185,14 @@ namespace Services.Implementations
                     _projectName = project.Name;
                 }
             }
-            if (report.CategoryId.HasValue)
-            {
-                var category = await _categoryRepository.GetByIdAsync((Guid)report.CategoryId);
-                if (category is not null)
-                {
-                    _categoryName = category.Name;
-                }
-            }
+            //if (report.CategoryId.HasValue)
+            //{
+            //    var category = await _categoryRepository.GetByIdAsync((Guid)report.CategoryId);
+            //    if (category is not null)
+            //    {
+            //        _categoryName = category.Name;
+            //    }
+            //}
             
         }
 
