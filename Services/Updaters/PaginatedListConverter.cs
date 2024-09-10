@@ -9,11 +9,11 @@ namespace Services.Converters
 {
     public class PaginatedListConverter <TSource, TDestination>
     {
-        public static void Convert(PaginatedList<TSource> source, PaginatedList<TDestination> destination)
+        public static void Convert(PaginatedList<TSource> source, PaginatedList<TDestination> target)
         {
-            destination.CurrentPage = source.CurrentPage;
-            destination.PageSize = source.PageSize;
-            destination.HasNext = source.HasNext;
+            target.CurrentPage = source.CurrentPage;
+            target.PageSize = source.PageSize;
+            target.HasNext = source.HasNext;
         }
         
     }

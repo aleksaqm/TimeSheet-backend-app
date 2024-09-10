@@ -7,6 +7,7 @@ using Domain.Repositories;
 using Infrastructure.UnitOfWork;
 using Services.Abstractions;
 using Services.Converters;
+using Services.Updaters;
 using Shared;
 
 namespace Services.Implementations
@@ -63,11 +64,7 @@ namespace Services.Implementations
             {
                 throw new ProjectNotFoundException("Project with given ID doesnt exist");
             }
-            existingProject.Name = project.Name;
-            existingProject.Description = project.Description;
-            existingProject.CustomerId = project.CustomerId;
-            existingProject.LeadId = project.LeadId;
-            existingProject.Status.StatusName = project.Status.StatusName;
+            ProjectUpdater.Update(project, existingProject);    
             await _unitOfWork.SaveChangesAsync();
             //for full return - _repository.GetByIdAsync(project.Id);
             return _mapper.Map<ProjectResponse>(existingProject);

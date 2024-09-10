@@ -8,6 +8,7 @@ using Services.Abstractions;
 using Shared;
 using Infrastructure.UnitOfWork;
 using Services.Converters;
+using Services.Updaters;
 
 namespace Services.Implementations
 {
@@ -56,11 +57,7 @@ namespace Services.Implementations
             {
                 throw new ClientNotFoundException("Client with given ID doesnt exist.");
             }
-            existingClient.Name = clientDto.Name;
-            existingClient.Address = clientDto.Address;
-            existingClient.City = clientDto.City;
-            existingClient.PostalCode = clientDto.PostalCode;
-            existingClient.Country = clientDto.Country;
+            ClientUpdater.Update(client, existingClient);
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<ClientResponse>(existingClient);
         }

@@ -7,6 +7,7 @@ using Domain.Repositories;
 using Infrastructure.UnitOfWork;
 using Services.Abstractions;
 using Services.Converters;
+using Services.Updaters;
 using Shared;
 
 namespace Services.Implementations
@@ -62,12 +63,7 @@ namespace Services.Implementations
             {
                 throw new TeamMemberNotFoundException("Team member with given ID doesnt exist");
             }
-            existingMember.Name = member.Name;
-            existingMember.Username = member.Username;
-            existingMember.Email = member.Email;
-            existingMember.HoursPerWeek = member.HoursPerWeek;
-            existingMember.Status.StatusName = member.Status.StatusName;
-            existingMember.Role = member.Role;
+            TeamMemberUpdater.Update(member, existingMember);
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<TeamMemberResponse>(existingMember);
         }

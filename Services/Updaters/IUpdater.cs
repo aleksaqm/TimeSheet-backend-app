@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Services.Converters
 {
-    public interface IConverter<TSource, TDestination>
+    public interface IUpdater<T>
     {
-        TDestination Convert(TSource source);
+        void Update(T source, T destination);
     }
 }

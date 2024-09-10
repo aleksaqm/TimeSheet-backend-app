@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Repositories;
 using Infrastructure.UnitOfWork;
 using Services.Abstractions;
+using Services.Updaters;
 using Shared;
 
 namespace Services.Implementations
@@ -88,14 +89,7 @@ namespace Services.Implementations
             {
                 throw new ActivityNotFoundException("Activity with given ID doesnt exist");
             }
-            existingActivity.Date = activity.Date;
-            existingActivity.CategoryId = activity.CategoryId;
-            existingActivity.ClientId = activity.ClientId;
-            existingActivity.ProjectId = activity.ProjectId;
-            existingActivity.UserId = activity.UserId;
-            existingActivity.Description = activity.Description;
-            existingActivity.Hours = activity.Hours;
-            existingActivity.Overtime = activity.Overtime;
+            ActivityUpdater.Update(activity, existingActivity);
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<ActivityResponse>(existingActivity);
         }
