@@ -9,7 +9,6 @@ namespace Domain.Repositories
         Task<Category?> GetByIdAsync(Guid id);
         Task<PaginatedList<Category>> GetAllAsync(QueryStringParameters parameters);
         Task AddAsync(Category category);
-        Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);
     }
 }

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Shared
 {
-    public class CategoryResponse
+    public enum Role
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
+        Admin, Worker
     }
 }

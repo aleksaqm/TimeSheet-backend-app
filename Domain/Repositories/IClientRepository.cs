@@ -9,7 +9,6 @@ namespace Domain.Repositories
         Task<Client?> GetByIdAsync(Guid id);
         Task<PaginatedList<Client>> GetAllAsync(QueryStringParameters parameters);
         Task AddAsync(Client client);
-        Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);
     }
 }

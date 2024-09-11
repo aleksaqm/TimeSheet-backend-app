@@ -57,12 +57,6 @@ namespace Infrastructure.Repositories
         public async Task AddAsync(Project project)
         {
             await _dbContext.Projects.AddAsync(project);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync()
-        {
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -73,7 +67,6 @@ namespace Infrastructure.Repositories
                 return false;
             };
             _dbContext.Projects.Remove(existingProject);
-            await _dbContext.SaveChangesAsync();
             return true;
         }
 

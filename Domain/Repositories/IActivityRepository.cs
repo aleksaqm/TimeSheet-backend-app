@@ -10,7 +10,6 @@ namespace Domain.Repositories
         Task<IEnumerable<Activity>> GetForOneDay(DateTime day, Guid userId);
         Task<IEnumerable<Activity>> GetForPeriod(DateTime startDate, DateTime endDate, Guid userId);
         Task AddAsync(Activity activity);
-        Task UpdateAsync();
         Task<bool> DeleteAsync(Guid id);
         Task<IEnumerable<Activity>> GetForReport(GetReportDto reportFilter);
     }

@@ -40,12 +40,6 @@ namespace Infrastructure.Repositories
         public async Task AddAsync(Client client)
         {
             await _dbContext.Clients.AddAsync(client);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync()
-        {
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -56,7 +50,6 @@ namespace Infrastructure.Repositories
                 return false;
             }
             _dbContext.Clients.Remove(existingClient);
-            await _dbContext.SaveChangesAsync();
             return true;
         }
     }

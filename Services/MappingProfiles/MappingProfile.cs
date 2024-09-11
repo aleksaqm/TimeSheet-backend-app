@@ -25,7 +25,7 @@ namespace Services.MappingProfiles
             CreateMap<TeamMember, TeamMemberCreateDto>();
             CreateMap<TeamMemberCreateDto, TeamMember>()
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => Enum.Parse(typeof(Role), src.Role, true)))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => new Status { StatusName = src.Status}));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => new Status { StatusName = src.Status }));
 
             CreateMap<Client, ClientCreateDto>().ReverseMap();
             CreateMap<Client, ClientUpdateDto>().ReverseMap();

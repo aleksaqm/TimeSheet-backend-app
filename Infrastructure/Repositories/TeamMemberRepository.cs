@@ -54,12 +54,6 @@ namespace Infrastructure.Repositories
         public async Task AddAsync(TeamMember member)
         {
             await _dbContext.TeamMembers.AddAsync(member);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync()
-        {
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -70,7 +64,6 @@ namespace Infrastructure.Repositories
                 return false;
             }
             _dbContext.TeamMembers.Remove(existingMember);
-            await _dbContext.SaveChangesAsync();
             return true;
         }
 
