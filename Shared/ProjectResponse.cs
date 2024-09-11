@@ -2,11 +2,11 @@
 {
     public class ProjectResponse
     {
-        public required Guid Id { get; set; }
-        public required string Name { get; set; }
+        public Guid Id { get; set; }
+        public string Name { get; set; }
         public string? Description { get; set; }
-        public required string Customer { get; set; }
-        public required string Lead { get; set; }
-        public required string Status { get; set; }
+        public string Customer { get; set; }
+        public string Lead { get; set; }
+        public string Status { get; set; }
     }
 }

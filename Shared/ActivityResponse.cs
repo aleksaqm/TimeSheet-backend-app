@@ -11,5 +11,6 @@
         public double Hours {  get; set; }
         public double? Overtime { get; set; }
         public Guid UserId { get; set; }
+
     }
 }

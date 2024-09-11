@@ -15,50 +15,28 @@ namespace Services.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
 
-        public AccountService(IUnitOfWork unitOfWork, ITokenService tokenService, IMapper mapper)
+        public AccountService(IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
-            _mapper = mapper;
         }
 
         public async Task<string> Login(LoginDto loginDto)
         {
-            var user = await _unitOfWork.TeamMemberRepository.GetByEmailAsync(loginDto.Email);
-            if (user is null)
-            {
-                throw new InvalidLoginCredentialsException("User with given email doesnt exist");
-            }
-            if (user.Password is [] && user.PasswordSalt is [])
-            {
-                await UpdatePassword(user, loginDto.Password);
-                return _tokenService.CreateToken(user);
-            }
+            var user = await _unitOfWork.TeamMemberRepository.GetByEmailAsync(loginDto.Email) 
+                ?? throw new InvalidLoginCredentialsException("User with given email doesnt exist");
+
+
             var hashFn = new HMACSHA512(user.PasswordSalt);
             var passwordHash = hashFn.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
-            for (int i = 0; i < passwordHash.Length; i++)
+            if (!passwordHash.SequenceEqual(user.Password))
             {
-                if (passwordHash[i] != user.Password[i])
-                {
-                    throw new InvalidLoginCredentialsException("Incorrect password");
-                }
+                throw new InvalidLoginCredentialsException("Incorrect password");
             }
 
             return _tokenService.CreateToken(user);
-        }
-
-        private async Task UpdatePassword(TeamMember user, string password)
-        {
-            var hashFn = new HMACSHA512();
-            var passwordHash = hashFn.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-            user.Password = passwordHash;
-            user.PasswordSalt = hashFn.Key;
-
-            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<RegisterDto> Register(RegisterDto registerDto)

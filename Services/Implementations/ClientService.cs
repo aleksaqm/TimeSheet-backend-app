@@ -70,7 +70,7 @@ namespace Services.Implementations
                 await _unitOfWork.SaveChangesAsync();
                 return true;
             }
-            throw new CategoryNotFoundException("Category with given ID doesnt exist");
+            throw new ClientNotFoundException("Category with given ID doesnt exist");
         }
     }
 }

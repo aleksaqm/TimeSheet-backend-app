@@ -158,15 +158,15 @@ namespace Services.Implementations
         {
             if (report.TeamMemberId.HasValue)
             {
-                var member = await _unitOfWork.TeamMemberRepository.GetByIdAsync((Guid)report.TeamMemberId);
+                var member = await _unitOfWork.TeamMemberRepository.GetByIdAsync(report.TeamMemberId.Value);
                 if (member is not null)
                 {
                     _teamMemberName = member.Name;
                 }
-            }
+            }   
             if (report.ClientId.HasValue)
             {
-                var client = await _unitOfWork.ClientRepository.GetByIdAsync((Guid)report.ClientId);
+                var client = await _unitOfWork.ClientRepository.GetByIdAsync(report.ClientId.Value);
                 if (client is not null)
                 {
                     _clientName = client.Name;
@@ -174,7 +174,7 @@ namespace Services.Implementations
             }
             if (report.ProjectId.HasValue)
             {
-                var project = await _unitOfWork.ProjectRepository.GetByIdAsync((Guid)report.ProjectId);
+                var project = await _unitOfWork.ProjectRepository.GetByIdAsync(report.ProjectId.Value);
                 if (project is not null)
                 {
                     _projectName = project.Name;
@@ -182,14 +182,12 @@ namespace Services.Implementations
             }
             if (report.CategoryId.HasValue)
             {
-                var category = await _unitOfWork.CategoryRepository.GetByIdAsync((Guid)report.CategoryId);
+                var category = await _unitOfWork.CategoryRepository.GetByIdAsync(report.CategoryId.Value);
                 if (category is not null)
                 {
                     _categoryName = category.Name;
                 }
             }
-
         }
-
     }
 }
