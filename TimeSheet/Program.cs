@@ -47,18 +47,13 @@ public class Program
 
 
         builder.Services.AddTransient<ICategoryService, CategoryService>();
-        //builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
-        //builder.Services.AddTransient<ITeamMemberRepository, TeamMemberRepository>();
         builder.Services.AddTransient<ITeamMemberService, TeamMemberService>();
 
-        //builder.Services.AddTransient<IClientRepository, ClientRepository>();
         builder.Services.AddTransient<IClientService, ClientService>();
 
-        //builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
         builder.Services.AddTransient<IProjectService, ProjectService>();
 
-        //builder.Services.AddTransient<IActivityRepository, ActivityRepository>();
         builder.Services.AddTransient<IActivityService, ActivityService>();
 
         builder.Services.AddTransient<IReportService, ReportService>();
@@ -72,6 +67,15 @@ public class Program
 
         builder.Services.AddDbContext<RepositoryDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: "MyAllowSpecificOrigins",
+                              policy =>
+                              {
+                                  policy.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader(); // add the allowed origins  
+                              });
+        });
 
 
         builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -94,6 +98,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.UseCors("MyAllowSpecificOrigins");
 
         app.Run();
     }
