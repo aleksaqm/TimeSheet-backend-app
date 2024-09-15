@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ActivityController : ControllerBase

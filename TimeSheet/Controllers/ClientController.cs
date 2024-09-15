@@ -32,7 +32,7 @@ namespace TimeSheet.Controllers
                 results.HasPrevious
             };
 
-            Response.Headers.Append("Pagination", JsonConvert.SerializeObject(metadata));
+            Response.Headers.Append("pagination", JsonConvert.SerializeObject(metadata));
             return Ok(results);
         }
 

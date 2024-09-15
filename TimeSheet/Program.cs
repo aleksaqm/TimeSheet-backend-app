@@ -73,7 +73,8 @@ public class Program
             options.AddPolicy(name: "MyAllowSpecificOrigins",
                               policy =>
                               {
-                                  policy.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader(); // add the allowed origins  
+                                  policy.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader()
+                                      .WithExposedHeaders("pagination");
                               });
         });
 
