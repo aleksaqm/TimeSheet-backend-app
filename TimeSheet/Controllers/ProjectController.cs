@@ -45,7 +45,7 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<ProjectResponse>> Add(ProjectCreateDto projectDto)
         {
