@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TimeSheet.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase

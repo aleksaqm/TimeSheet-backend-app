@@ -8,8 +8,8 @@ namespace Shared
 {
     public class WorkDayDto
     {
-        public required DateTime Date {  get; set; }
-        public required double TotalHours { get; set; }
-        public required List<ActivityResponse> Activities { get; set; }
+        public required DateTime date {  get; set; }
+        public required double totalHours { get; set; }
+        public required List<ActivityResponse> activities { get; set; }
     }
 }

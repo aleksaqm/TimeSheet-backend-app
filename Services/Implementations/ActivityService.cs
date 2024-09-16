@@ -50,7 +50,7 @@ namespace Services.Implementations
             {
                 var activities = await _unitOfWork.ActivityRepository.GetForOneDay(startDate, userId);
                 var totalHours = activities.Sum(x => x.Hours + (double)x.Overtime);
-                days.Add(new WorkDayDto { Activities = _mapper.Map<List<ActivityResponse>>(activities), Date = startDate, TotalHours = totalHours }); //
+                days.Add(new WorkDayDto { activities = _mapper.Map<List<ActivityResponse>>(activities), date = startDate, totalHours = totalHours }); //
                 startDate = startDate.AddDays(1);
             }
             return days;

@@ -8,7 +8,7 @@ using Shared;
 
 namespace TimeSheet.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
