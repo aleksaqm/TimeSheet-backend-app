@@ -53,7 +53,7 @@ namespace TimeSheet.Controllers
             return Ok(project);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<ProjectResponse>> Update(ProjectUpdateDto projectDto)
         {
@@ -61,7 +61,7 @@ namespace TimeSheet.Controllers
             return Ok(project);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)

@@ -18,7 +18,7 @@ namespace TimeSheet.Controllers
             _activityService = service;
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<ActivityResponse>>> GetAll()
         {

@@ -23,7 +23,8 @@ namespace Services.Implementations
             {
                 new (ClaimTypes.Sid, member.Id.ToString()),
                 new (ClaimTypes.Email, member.Email),
-                new (ClaimTypes.Role, member.Role.ToString())
+                new (ClaimTypes.Role, member.Role.ToString()),
+                new (ClaimTypes.Name, member.Name),
             };
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
