@@ -8,7 +8,7 @@ using Shared;
 
 namespace TimeSheet.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ClientController : ControllerBase
@@ -44,7 +44,7 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<ClientResponse>> Add(ClientCreateDto clientDto)
         {
@@ -52,7 +52,7 @@ namespace TimeSheet.Controllers
             return Ok(client);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<ClientResponse>> Update(ClientUpdateDto clientDto)
         {
@@ -60,7 +60,7 @@ namespace TimeSheet.Controllers
             return Ok(client);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)

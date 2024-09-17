@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TimeSheet.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase
@@ -45,7 +45,7 @@ namespace TimeSheet.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<ProjectResponse>> Add(ProjectCreateDto projectDto)
         {
@@ -53,7 +53,7 @@ namespace TimeSheet.Controllers
             return Ok(project);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<ProjectResponse>> Update(ProjectUpdateDto projectDto)
         {
@@ -61,7 +61,7 @@ namespace TimeSheet.Controllers
             return Ok(project);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)

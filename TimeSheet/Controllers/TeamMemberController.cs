@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TimeSheet.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TeamMemberController : ControllerBase
@@ -67,7 +67,7 @@ namespace TimeSheet.Controllers
             return Ok(member);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)

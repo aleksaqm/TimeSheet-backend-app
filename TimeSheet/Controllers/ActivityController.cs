@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TimeSheet.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ActivityController : ControllerBase
@@ -18,7 +18,7 @@ namespace TimeSheet.Controllers
             _activityService = service;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<ActivityResponse>>> GetAll()
         {
