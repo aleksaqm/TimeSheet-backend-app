@@ -5,17 +5,11 @@ using Domain.Exceptions;
 using Infrastructure.Repositories;
 using Infrastructure.UnitOfWork;
 using Moq;
-using NuGet.Frameworks;
-using Service.Abstractions;
 using Services.Abstractions;
 using Services.Implementations;
 using Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Test.UnitTests
 {

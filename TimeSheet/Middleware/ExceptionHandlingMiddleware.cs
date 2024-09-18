@@ -46,8 +46,6 @@ namespace TimeSheet.Middleware
                 UsernameAlreadyTakenException _ => new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Username already taken", Detail = ex.Message },
                 EmailAlreadyExistsException _ => new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Email already exists", Detail = ex.Message },
                 InvalidLoginCredentialsException _ => new ProblemDetails { Status = StatusCodes.Status400BadRequest, Title = "Invalid login credentials", Detail = ex.Message },
-
-                //_ => new ProblemDetails((int)HttpStatusCode.InternalServerError, "Internal server error. Please retry later.")
             };
 
             context.Response.ContentType = "application/json";
